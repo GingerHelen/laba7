@@ -7,6 +7,15 @@ import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.Map;
 
+/**
+ * TypeAdapter для объектов типа LocalDateTime. Из json-строки следующего типа будет получен объект класса LocalDateTime
+ *       { "year": 2023,
+ *       "month": 3,
+ *       "day": 16,
+ *       "hour": 11,
+ *       "minute": 30
+ *       }
+ */
 public class LocalDateTimeDeserializer implements JsonDeserializer<LocalDateTime> {
     @Override
     public LocalDateTime deserialize(JsonElement jsonElement, Type typeOfT, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {

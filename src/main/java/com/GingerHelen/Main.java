@@ -46,7 +46,7 @@ public class Main {
         } catch (JsonSyntaxException e) {
             outputManager.println("wrong json syntax");
         } catch (InvalidInputException e) {
-            outputManager.printlnImportantMessage("invalid input");
+            outputManager.printlnImportantMessage("invalid input, goodbye :)");
         }
     }
 }

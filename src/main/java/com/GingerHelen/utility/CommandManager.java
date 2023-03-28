@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Queue;
 
 
+/**
+ * класс, содержащий множество доступных пользователю команд и регулирующий их работу
+ */
 public class CommandManager {
     private final ArrayList<Command> commands = new ArrayList<>();
     private final Queue<Command> history = new ArrayDeque<>();
@@ -36,6 +39,17 @@ public class CommandManager {
         commands.add(new SaveCommand(collectionManager, outputManager));
     }
 
+    /**
+     * исполнить команду
+     * @param stringCommand название команды
+     * @param argument аргумент команды (может быть пустым)
+     * @return executeFlag выполненной команды
+     * @throws ScriptException ошибка в скрипте
+     * @throws InvalidInputException ошибка ввода
+     * @throws NoSuchCommandException пользователь пытается исполнить команду, которой не существует
+     * @throws IllegalArgumentException неверный аргумент команды
+     * @throws IOException ошибка при чтении файла
+     */
     public boolean executeCommand(String stringCommand, String argument) throws ScriptException, InvalidInputException, NoSuchCommandException, IllegalArgumentException, IOException {
         if (commands.stream().anyMatch(e -> e.getName().equals(stringCommand))) {
             Command command = commands.stream().filter(e -> e.getName().equals(stringCommand)).findFirst().get();
@@ -47,6 +61,10 @@ public class CommandManager {
         }
     }
 
+    /**
+     * добавляет команду в историю в случае исполнения (в методе executeCommand)
+     * @param command исполненная команда
+     */
     private void addToHistory(Command command) {
         if (history.size() == numberOfElements) {
             history.poll();

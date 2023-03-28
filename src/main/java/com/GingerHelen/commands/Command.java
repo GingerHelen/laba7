@@ -6,6 +6,9 @@ import com.GingerHelen.exceptions.InvalidInputException;
 import javax.script.ScriptException;
 import java.io.IOException;
 
+/**
+ * абстрактный класс - родитель всех команд
+ */
 public abstract class Command {
     private final String name;
     private final String description;
@@ -30,6 +33,10 @@ public abstract class Command {
         return executeFlag;
     }
 
+    /**
+     * устанавливает значение переменной executeFlag
+     * @param executeFlag true - после исполнения команды программа продолжает считывать и исполнять команды, false - команды далее не считываются
+     */
     public void setExecuteFlag(boolean executeFlag) {
         this.executeFlag = executeFlag;
     }

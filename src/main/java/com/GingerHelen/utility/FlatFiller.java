@@ -5,6 +5,9 @@ import com.GingerHelen.exceptions.InvalidInputException;
 import javax.script.ScriptException;
 import java.io.IOException;
 
+/**
+ * класс с обобщенным методом чтения некоторого поля типа T
+ */
 public class FlatFiller {
     private final OutputManager outputManager;
     private final InputManager inputManager;
@@ -14,6 +17,14 @@ public class FlatFiller {
         this.inputManager = inputManager;
     }
 
+    /**
+     * @param message сообщение, которое выводится в консоли с запросом на ввод (н-р, "введите число")
+     * @param reader метод, осуществляющий чтение поля
+     * @return значение типа T, которое соответствует требованиям
+     * @throws InvalidInputException ошибка ввода
+     * @throws ScriptException ошибка при чтении скрипта (неправильное значение поля)
+     * @throws IOException ошибка при чтении файла
+     */
     public <T> T fill(String message, Reader<T> reader) throws InvalidInputException, ScriptException, IOException {
         T returns;
         while (true) {

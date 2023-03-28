@@ -9,6 +9,9 @@ import com.GingerHelen.utility.FlatFillerMain;
 import javax.script.ScriptException;
 import java.io.IOException;
 
+/**
+ * класс, реализующий команду update (изменение элемента коллекции по заданному id)
+ */
 public class UpdateIdCommand extends Command {
     private final CollectionManager collectionManager;
     private final FlatFillerMain flatFillerMain;
@@ -18,6 +21,15 @@ public class UpdateIdCommand extends Command {
         this.flatFillerMain = flatFillerMain;
     }
 
+    /**
+     * если переданный аргумент - число типа Integer и в коллекции есть элемент с таким id, команда запрашивает новое
+     * значение элемента через FlatFillerMain и обновляет элемент в коллекции
+     * @param argument id, по которому будет изменен элемент
+     * @throws IllegalArgumentException в случае, если аргумент пустой или не является число типа Integer
+     * @throws ScriptException если есть ошибки в задании элемента или команды при чтении из скрипта
+     * @throws InvalidInputException ошибка при вводе (ctrl+d)
+     * @throws IOException ошибка при чтении
+     */
     @Override
     public void execute(String argument) throws IllegalArgumentException, ScriptException, InvalidInputException, IOException {
         if (argument.isEmpty()) {

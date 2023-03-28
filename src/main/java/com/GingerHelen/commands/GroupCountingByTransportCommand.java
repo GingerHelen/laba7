@@ -7,6 +7,10 @@ import com.GingerHelen.utility.OutputManager;
 
 import java.util.Map;
 
+/**
+ * класс, реализующий команду group_counting_by_transport (группировка элементов коллекции по значению поля transport и
+ * вывод количество элементов в каждой группе)
+ */
 public class GroupCountingByTransportCommand extends Command {
     private final CollectionManager collectionManager;
     private final OutputManager outputManager;
@@ -17,7 +21,13 @@ public class GroupCountingByTransportCommand extends Command {
         this.outputManager = outputManager;
     }
 
-
+    /**
+     * если аргумент пустой, команда проверяет коллекцию на пустоту и в положительном исходе
+     * группирует элементы коллекции по значению поля transport и выводит в консоль количество
+     * элементов в каждой из получившихся групп
+     * @param argument должен быть пустым для корректной работы программы
+     * @throws IllegalArgumentException в случае, если аргумент не пустой
+     */
     @Override
     public void execute(String argument) throws IllegalArgumentException {
         if (!argument.isEmpty()) {

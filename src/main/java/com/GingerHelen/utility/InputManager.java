@@ -6,6 +6,9 @@ import java.nio.file.Paths;
 import java.util.Stack;
 import com.GingerHelen.exceptions.InvalidInputException;
 
+/**
+ * класс, реализующий ввод данных
+ */
 public class InputManager {
     private final Stack<BufferedReader> readers = new Stack<>();
     private final Stack<File> files = new Stack<>();
@@ -30,6 +33,11 @@ public class InputManager {
          }
      }
 
+    /**
+     * если обнаружена рекурсия (внутри одного éxecute_script несколько раз считывание одного  и того же файла), то будет выведено
+     * сообщение об этом и файл не будет прочитан повторно
+     * @param fileName путь к файлу со скриптом
+     */
     public void startReadScript(String fileName) {
         File scriptFile = new File(fileName);
         if (files.contains(scriptFile)) {
@@ -58,8 +66,12 @@ public class InputManager {
                 scriptMode = false;
                 outputManager.enableNotifications();
             }
-            readers.pop();
-            outputManager.printlnImportantMessage("Reading from file " + files.pop().getName() + " was finished");
+            try {
+                readers.pop().close();
+                outputManager.printlnImportantMessage("Reading from file " + files.pop().getName() + " was finished");
+            } catch (IOException e) {
+                outputManager.printlnImportantMessage("error during closing file " + files.pop().getName());
+            }
         }
     }
 }

@@ -7,6 +7,9 @@ import com.GingerHelen.utility.OutputManager;
 
 import javax.script.ScriptException;
 
+/**
+ * класс, реализующий команду show
+ */
 public class ShowCommand extends Command {
     private final CollectionManager collectionManager;
     private final OutputManager outputManager;
@@ -17,6 +20,13 @@ public class ShowCommand extends Command {
         this.outputManager = outputManager;
     }
 
+    /**
+     * если аргумент пустой, команда выводит в консоль элементы коллекции, упорядоченные по ключам в строковом представлении
+     * @param argument - аргумент должен быть пустой, чтобы команда сработала корректно
+     * @throws IllegalArgumentException в случае, если аргумент не пустой
+     * @throws ScriptException если есть ошибки в задании элемента или команды при чтении из скрипта
+     * @throws InvalidInputException - ошибка при вводе
+     */
     @Override
     public void execute(String argument) throws IllegalArgumentException, ScriptException, InvalidInputException {
         if (!argument.isEmpty()) {

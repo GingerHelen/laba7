@@ -2,10 +2,16 @@ package com.GingerHelen.utility;
 
 import java.io.PrintStream;
 
+/**
+ * класс, реализующий вывод сообщений в консоль
+ */
 public class OutputManager {
     private final PrintStream printStream;
     private MessageNotifications messageNotifications = MessageNotifications.ON;
 
+    /**
+     * если off, то выводятся только те сообщения, которые переданы методу printlnImportantMessage. Если on, то выводятся все сообщения
+     */
     private enum MessageNotifications {
         ON,
         OFF

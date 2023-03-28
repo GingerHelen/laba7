@@ -8,6 +8,9 @@ import com.GingerHelen.utility.FlatFillerMain;
 import javax.script.ScriptException;
 import java.io.IOException;
 
+/**
+ * класс, реализующий команду insert (добавление элемента с заданным ключом)
+ */
 public class InsertCommand extends Command {
     private final  CollectionManager collectionManager;
 
@@ -18,6 +21,15 @@ public class InsertCommand extends Command {
         this.flatFillerMain = flatFillerMain;
     }
 
+    /**
+     * если переданный аргумент - число типа Long и в коллекции нет элемента с таким ключом, команда запрашивает у пользователя
+     * значения элемента и добавляет его под заданным ключом в коллекцию
+     * @param argument key, принадлежащий новому элементу
+     * @throws IllegalArgumentException в случае, если аргумент не пустой
+     * @throws ScriptException если есть ошибки в задании элемента или команды при чтении из скрипта
+     * @throws InvalidInputException ошибка ввода
+     * @throws IOException ошибка при чтении
+     */
     @Override
     public void execute(String argument) throws IllegalArgumentException, ScriptException, InvalidInputException, IOException {
         if (argument.isEmpty()) {

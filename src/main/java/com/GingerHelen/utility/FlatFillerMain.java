@@ -6,6 +6,10 @@ import com.GingerHelen.exceptions.InvalidInputException;
 import javax.script.ScriptException;
 import java.io.IOException;
 
+/**
+ * класс, запрашивающий у пользователя значения полей для объекта класса Flat до тех пор, пока
+ * они не будут соответствовать требованиям из т/з (для консоли), или единожды (для скрипта)
+ */
 public class FlatFillerMain {
     private final FlatReader reader;
     private final CollectionManager collectionManager;

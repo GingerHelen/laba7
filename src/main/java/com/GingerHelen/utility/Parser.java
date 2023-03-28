@@ -10,7 +10,13 @@ import java.time.LocalDateTime;
 import java.util.TreeMap;
 
 public final class Parser {
-    public static TreeMap<Long, Flat> deSerialize(String strData) throws JsonSyntaxException, IllegalArgumentException {
+    /**
+     * перевод из строки json в java-объект
+     * @param strData преобразование данных в формат String
+     * @return переданная коллекция в формате java-объекта (TreeMap)
+     * @throws JsonSyntaxException в случае ошибок синтаксиса json строки
+     */
+    public static TreeMap<Long, Flat> deSerialize(String strData) throws JsonSyntaxException {
         if (strData.trim().isEmpty()) {
             return new TreeMap<>();
         }
@@ -19,6 +25,12 @@ public final class Parser {
         }.getType();
         return g.fromJson(strData, type);
     }
+
+    /**
+     * перевод из java-объекта в строку json
+     * @param collectionData коллекция, которая преобразовывается в json формат
+     * @return переданная коллекция в формате String в виде json
+     */
     public static String serialize(TreeMap<Long, Flat> collectionData) {
         Gson g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer()).
                 setPrettyPrinting().create();

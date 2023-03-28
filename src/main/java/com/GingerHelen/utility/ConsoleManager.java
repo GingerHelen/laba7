@@ -8,6 +8,9 @@ import javax.script.ScriptException;
 import java.io.IOException;
 import java.util.Locale;
 
+/**
+ * класс, принимающий команды из консоли и запускающий работу команд
+ */
 public class ConsoleManager {
     private final CommandManager commandManager;
     private final InputManager inputManager;
@@ -19,6 +22,11 @@ public class ConsoleManager {
         this.outputManager = outputManager;
     }
 
+    /**
+     * старт чтения команд
+     * @throws InvalidInputException ошибка ввода
+     * @throws IOException ошибка при чтении файла
+     */
     public void start() throws InvalidInputException, IOException {
         outputManager.println("The program is ready!!");
         boolean executeFlag = true;

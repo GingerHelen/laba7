@@ -124,7 +124,7 @@ public class Flat implements Comparable<Flat> {
                 ", coordinates=" + coordinates +
                 ", creationDate=" + creationDate +
                 ", area=" + area +
-                ", numberOfRooms" + numberOfRooms +
+                ", numberOfRooms=" + numberOfRooms +
                 ", furnish=" + furnish +
                 ", view=" + view +
                 ", transport=" + transport +

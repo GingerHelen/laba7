@@ -10,6 +10,9 @@ import com.GingerHelen.exceptions.InvalidInputException;
 import java.io.IOException;
 import java.util.Locale;
 
+/**
+ * класс с методами для чтения полей объекта типа Flat
+ */
 public class FlatReader {
     private static final long MIN_Y = -808;
     private final InputManager inputManager;

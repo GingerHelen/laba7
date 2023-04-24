@@ -1,10 +1,6 @@
 package com.GingerHelen.utility;
 
 import com.GingerHelen.commands.*;
-import com.GingerHelen.exceptions.IllegalArgumentException;
-import com.GingerHelen.exceptions.InvalidInputException;
-import com.GingerHelen.exceptions.NoSuchCommandException;
-import com.GingerHelen.exceptions.ScriptException;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -21,6 +17,7 @@ public class CommandManager {
     private final HashMap<String, Requirement> commandsWithRequirements = new HashMap<>();
     private final Queue<Command> history = new ArrayDeque<>();
     private final static int numberOfElements = 8;
+    private final CollectionManager collectionManager;
 
     public CommandManager(CollectionManager collectionManager) {
         commands.add(new ClearCommand(collectionManager));
@@ -40,6 +37,8 @@ public class CommandManager {
         commands.add(new HistoryCommand(history));
 
         commands.forEach(e -> commandsWithRequirements.put(e.getName(), e.getRequirement()));
+
+        this.collectionManager = collectionManager;
     }
 
     /**
@@ -73,5 +72,15 @@ public class CommandManager {
 
     public HashMap<String, Requirement> getCommandsWithRequirements() {
         return commandsWithRequirements;
+    }
+
+    public boolean save() {
+        try {
+            collectionManager.save();
+            return true;
+        } catch (IOException e) {
+            System.out.println("error during saving");
+            return false;
+        }
     }
 }

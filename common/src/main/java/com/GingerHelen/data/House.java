@@ -1,6 +1,8 @@
 package com.GingerHelen.data;
 
-public class House implements Comparable<House> {
+import java.io.Serializable;
+
+public class House implements Comparable<House>, Serializable {
     private String name; //Поле не может быть null
     private Long year; //Поле может быть null, Значение поля должно быть больше 0
     private Integer numberOfFloors; //Значение поля должно быть больше 0

@@ -20,7 +20,6 @@ public class ExitCommand extends Command {
         if (!argument.isEmpty() || objArg != null) {
             return new Response(ResponseCode.ERROR, "this command doesn't need an argument");
         }
-        // setExecuteFlag(false);
         return new Response(ResponseCode.EXIT);
     }
 }

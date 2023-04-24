@@ -5,6 +5,7 @@ import com.GingerHelen.utility.Response;
 import com.GingerHelen.utility.ResponseCode;
 
 import java.util.Queue;
+import java.util.StringJoiner;
 
 /**
  * класс, реализующий команду history (вывод названия последних 8 вызванных команд)
@@ -26,9 +27,9 @@ public class HistoryCommand extends Command {
         if (!argument.isEmpty() || objArg != null) {
             new Response(ResponseCode.ERROR, "this command doesn't need an argument");
         }
-        StringBuilder response = new StringBuilder("\n");
-        response.append("last commands:");
-        history.forEach(e -> response.append(e.getName()));
+        StringJoiner response = new StringJoiner("\n");
+        response.add("last commands:");
+        history.forEach(e -> response.add(e.getName()));
         return new Response(ResponseCode.TEXT, response.toString());
     }
 }

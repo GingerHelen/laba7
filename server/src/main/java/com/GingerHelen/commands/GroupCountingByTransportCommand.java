@@ -7,6 +7,7 @@ import com.GingerHelen.utility.Response;
 import com.GingerHelen.utility.ResponseCode;
 
 import java.util.Map;
+import java.util.StringJoiner;
 
 /**
  * класс, реализующий команду group_counting_by_transport (группировка элементов коллекции по значению поля transport и
@@ -37,8 +38,8 @@ public class GroupCountingByTransportCommand extends Command {
             return new Response(ResponseCode.OK, "the collection is empty or all the elements have null value of" +
                     " transport field");
         }
-        StringBuilder response = new StringBuilder("\n");
-        res.forEach((k, v) -> response.append(k + ": " + v));
+        StringJoiner response = new StringJoiner("\n");
+        res.forEach((k, v) -> response.add(k + ": " + v));
         return new Response(ResponseCode.OK, response.toString());
     }
 }

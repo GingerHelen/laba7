@@ -12,13 +12,10 @@ import java.io.IOException;
  */
 public class FlatFillerMain {
     private final FlatReader reader;
-    private final CollectionManager collectionManager;
     private final FlatFiller flatFiller;
 
-    public FlatFillerMain(FlatReader reader, InputManager inputManager,
-                             OutputManager outputManager, CollectionManager collectionManager) {
+    public FlatFillerMain(FlatReader reader, InputManager inputManager, OutputManager outputManager) {
         this.reader = reader;
-        this.collectionManager = collectionManager;
         flatFiller = new FlatFiller(outputManager, inputManager);
     }
 
@@ -91,6 +88,6 @@ public class FlatFillerMain {
 
     public Flat fillFlat() throws ScriptException, InvalidInputException, IOException {
         return new Flat(this.fillName(), this.fillCoordinates(), this.fillArea(), this.fillNumberOfRooms(), this.fillFurnish(),
-                this.fillView(), this.fillTransport(), this.fillHouse(), collectionManager);
+                this.fillView(), this.fillTransport(), this.fillHouse());
     }
 }

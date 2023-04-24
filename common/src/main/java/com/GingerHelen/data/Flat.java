@@ -1,11 +1,12 @@
 package com.GingerHelen.data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import com.GingerHelen.utility.CollectionManager;
 
 
-public class Flat implements Comparable<Flat> {
+public class Flat implements Comparable<Flat>, Serializable {
     private Integer id;
 
     private String name;
@@ -27,7 +28,7 @@ public class Flat implements Comparable<Flat> {
     private House house;
 
     public Flat(String name, Coordinates coordinates, Long area, long numberOfRooms,
-                Furnish furnish, View view, Transport transport, House house, CollectionManager collectionManager) {
+                Furnish furnish, View view, Transport transport, House house) {
         this.name = name;
         this.coordinates = coordinates;
         this.area = area;
@@ -36,7 +37,6 @@ public class Flat implements Comparable<Flat> {
         this.view = view;
         this.transport = transport;
         this.house = house;
-        id = collectionManager.getMaxId() + 1;
         this.creationDate = LocalDateTime.now();
     }
 

@@ -22,7 +22,6 @@ public class ExecuteScriptCommand extends Command {
         if(argument.isEmpty() || objArg != null) {
             return new Response(ResponseCode.ERROR, "the command should contain the filename as an argument");
         }
-        // inputManager.startReadScript(argument); // to client
         return new Response(ResponseCode.READ_SCRIPT, argument);
     }
 }

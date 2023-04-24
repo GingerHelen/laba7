@@ -40,6 +40,7 @@ public class CollectionManager {
      * @param flat
      */
     public void addToCollection(Long key, Flat flat) {
+        flat.setId(this.getMaxId() + 1);
         collection.put(key, flat);
     }
 
@@ -149,6 +150,7 @@ public class CollectionManager {
      * обновить элемент с заданным id
      */
     public void update(Integer id, Flat newValue) {
+        newValue.setId(id);
         collection.entrySet().stream().filter(e -> e.getValue().getId().equals(id)).findFirst().get().setValue(newValue);
     }
 }

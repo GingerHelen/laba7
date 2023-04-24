@@ -1,10 +1,10 @@
 package com.GingerHelen;
 
 import com.GingerHelen.data.Flat;
-import com.GingerHelen.exceptions.InvalidInputException;
 import com.GingerHelen.utility.CollectionManager;
 import com.GingerHelen.utility.CommandManager;
 import com.GingerHelen.utility.Parser;
+import com.GingerHelen.utility.RequestManager;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.*;
@@ -14,16 +14,18 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Scanner;
 import java.util.TreeMap;
 
 
-public class Main {
+public class Server {
     private static final int HOST_INDEX = 0;
     private static final int PORT_INDEX = 1;
     private static final int FILEPATH_INDEX = 2;
     private static final int MAX_PORT = 65535;
     private static final int MIN_PORT = 1;
     private static final int NUMBER_OF_ARGS = 3;
+
     public static void main(String[] args) throws IOException {
         if (args.length != NUMBER_OF_ARGS) {
             System.out.println("Программа не может быть запущена, вам нужно указать host name, port и file path в заданном порядке");
@@ -32,7 +34,7 @@ public class Main {
         int port;
         try {
             port = Integer.parseInt(args[PORT_INDEX]);
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             System.out.println("Порт должен задаваться целым числом");
             return;
         }
@@ -52,7 +54,7 @@ public class Main {
             return;
         }
 
-        try(DatagramChannel server = DatagramChannel.open()) {
+        try (DatagramChannel server = DatagramChannel.open()) {
             server.bind(address).configureBlocking(false);
             BufferedInputStream bf = new BufferedInputStream(Files.newInputStream(path));
             BufferedReader reader = new BufferedReader(new InputStreamReader(bf, StandardCharsets.UTF_8));
@@ -65,16 +67,12 @@ public class Main {
             TreeMap<Long, Flat> flats = Parser.deSerialize(b.toString());
             CollectionManager collectionManager = new CollectionManager(flats, args[FILEPATH_INDEX]);
             CommandManager commandManager = new CommandManager(collectionManager);
+            RequestManager requestManager = new RequestManager(server, commandManager, new Scanner(System.in));
+            requestManager.start();
         } catch (JsonSyntaxException e) {
             System.out.println("wrong json syntax");
+        } catch (ClassNotFoundException | InterruptedException e) {
+            System.out.println("error");
         }
-
-
-
-
-
-
-        // start() в consolemanager, но вместо консоли receive() в datagramchannel
-        // отправка ответа
     }
 }

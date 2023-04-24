@@ -5,6 +5,8 @@ import com.GingerHelen.utility.Requirement;
 import com.GingerHelen.utility.Response;
 import com.GingerHelen.utility.ResponseCode;
 
+import java.util.StringJoiner;
+
 /**
  * класс, реализующий команду print_ascending (вывод элементов коллекции в порядке возрастания по заданной сортировке
  * по умолчанию)
@@ -27,8 +29,8 @@ public class PrintAscendingCommand extends Command {
         if (!argument.isEmpty() || objArg != null) {
             return new Response(ResponseCode.ERROR, "this command doesn't need an argument");
         }
-        StringBuilder response = new StringBuilder("\n");
-        collectionManager.printAscending().forEach((k, v) -> response.append(k + ": " + v));
+        StringJoiner response = new StringJoiner("\n");
+        collectionManager.printAscending().forEach((k, v) -> response.add(k + ": " + v));
         return new Response(ResponseCode.OK, response.toString());
     }
 }

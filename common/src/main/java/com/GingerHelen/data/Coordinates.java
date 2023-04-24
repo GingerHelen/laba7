@@ -1,8 +1,9 @@
 package com.GingerHelen.data;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Coordinates {
+public class Coordinates implements Serializable {
     private int x;
     private long y;
     public Coordinates(int x, long y) {

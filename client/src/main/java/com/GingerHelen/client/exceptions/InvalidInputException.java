@@ -2,6 +2,6 @@ package com.GingerHelen.client.exceptions;
 
 public class InvalidInputException extends Exception {
     public String getMessage() {
-        return "какая-то ошибка (возможно это и есть ctrl d)"; //TODO
+        return "invalid input, work with the collection will be finished";
     }
 }

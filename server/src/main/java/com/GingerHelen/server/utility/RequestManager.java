@@ -50,7 +50,11 @@ public class RequestManager {
                     isWorking = false;
                 }
                 if (serverCommand.equals("save")) {
-                    commandManager.save();
+                    if (commandManager.save()) {
+                        logger.info("data has been rewritten in file");
+                    } else {
+                        logger.error("cannot rewrite data in file");
+                    }
                 }
             }
         }

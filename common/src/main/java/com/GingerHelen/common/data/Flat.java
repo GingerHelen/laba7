@@ -10,21 +10,22 @@ public class Flat implements Comparable<Flat>, Serializable {
 
     private String name;
 
-    private Coordinates coordinates;
+    private final Coordinates coordinates;
 
-    private LocalDateTime creationDate;
+    private final LocalDateTime creationDate;
 
-    private Long area;
+    private final Long area;
 
-    private long numberOfRooms;
+    private final long numberOfRooms;
 
-    private Furnish furnish;
+    private final Furnish furnish;
 
-    private View view;
+    private final View view;
 
-    private Transport transport;
+    private final Transport transport;
 
-    private House house;
+    private final House house;
+    private final int hashcode;
 
     public Flat(String name, Coordinates coordinates, Long area, long numberOfRooms,
                 Furnish furnish, View view, Transport transport, House house) {
@@ -37,10 +38,8 @@ public class Flat implements Comparable<Flat>, Serializable {
         this.transport = transport;
         this.house = house;
         this.creationDate = LocalDateTime.now();
-    }
 
-    public Flat() {
-
+        hashcode = Objects.hash(name, coordinates, house, transport, furnish);
     }
 
     public Integer getId() {
@@ -59,60 +58,12 @@ public class Flat implements Comparable<Flat>, Serializable {
         this.name = name;
     }
 
-    public Coordinates getCoordinates() {
-        return coordinates;
-    }
-
-    public void setCoordinates(Coordinates coordinates) {
-        this.coordinates = coordinates;
-    }
-
-    public Long getArea() {
-        return area;
-    }
-
-    public void setArea(Long area) {
-        this.area = area;
-    }
-
-    public long getNumberOfRooms() {
-        return numberOfRooms;
-    }
-
-    public void setNumberOfRooms(long numberOfRooms) {
-        this.numberOfRooms = numberOfRooms;
-    }
-
-    public Furnish getFurnish() {
-        return furnish;
-    }
-
-    public void setFurnish(Furnish furnish) {
-        this.furnish = furnish;
-    }
-
-    public View getView() {
-        return view;
-    }
-
-    public void setView(View view) {
-        this.view = view;
-    }
-
     public Transport getTransport() {
         return transport;
     }
 
-    public void setTransport(Transport transport) {
-        this.transport = transport;
-    }
-
     public House getHouse() {
         return house;
-    }
-
-    public void setHouse(House house) {
-        this.house = house;
     }
 
     @Override
@@ -132,7 +83,7 @@ public class Flat implements Comparable<Flat>, Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, coordinates, house, transport, furnish);
+        return hashcode;
     }
 
     @Override

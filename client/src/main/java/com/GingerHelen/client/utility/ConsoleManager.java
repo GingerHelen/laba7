@@ -47,13 +47,12 @@ public class ConsoleManager {
         while (isWorking) {
             String input = inputManager.read();
             if (!input.trim().isEmpty()) {
-                String inputCommand = input.split(" ")[0].toLowerCase(Locale.ROOT);
-                String argument = "";
-                if (input.split(" ").length > 1) {
-                    argument = input.replaceFirst(inputCommand + " ", "");
-                }
+                String[] commandWithArg = getCommand(input);
+                String inputCommand = commandWithArg[0];
+                String argument = commandWithArg[1];
+
                 if (requirements.containsKey(inputCommand)) {
-                    Request request = new Request(inputCommand, argument);
+                    Request request = new Request(inputCommand, argument, Locale.getDefault());
                     Requirement requirement = requirements.get(inputCommand);
                     if (requirement == Requirement.FLAT || requirement == Requirement.FLATARGUMENT) {
                         try {
@@ -66,23 +65,7 @@ public class ConsoleManager {
                     }
                     send(request);
                     Response response = (Response) receive();
-                    switch (response.getResponseCode()) {
-                        case OK:
-                            outputManager.println("command was completed");
-                            break;
-                        case TEXT:
-                            outputManager.printlnImportantMessage(response.getMessage());
-                            break;
-                        case ERROR:
-                            outputManager.printlnImportantMessage("command wasn't completed");
-                            outputManager.printlnImportantMessage(response.getMessage());
-                            break;
-                        case READ_SCRIPT:
-                            inputManager.startReadScript(response.getMessage());
-                            break;
-                        case EXIT:
-                            isWorking = false;
-                    }
+                    isWorking = handleResponseCode(response);
                 } else {
                     outputManager.printlnImportantMessage("no such command as " + inputCommand);
                 }
@@ -123,5 +106,36 @@ public class ConsoleManager {
             }
         }
         return Serializer.deserialize(bytesReceiving);
+    }
+
+    private boolean handleResponseCode (Response response) {
+        boolean isWorking = true;
+        switch (response.getResponseCode()) {
+            case OK:
+                outputManager.println("command was completed");
+                break;
+            case TEXT:
+                outputManager.printlnImportantMessage(response.getMessage());
+                break;
+            case ERROR:
+                outputManager.printlnImportantMessage("command wasn't completed");
+                outputManager.printlnImportantMessage(response.getMessage());
+                break;
+            case READ_SCRIPT:
+                inputManager.startReadScript(response.getMessage());
+                break;
+            case EXIT:
+                isWorking = false;
+        }
+        return isWorking;
+    }
+
+    private String[] getCommand(String input) {
+        String[] commandWithArg = new String[2];
+        commandWithArg[0] = input.split(" ")[0].toLowerCase(Locale.ROOT);
+        if (input.split(" ").length > 1) {
+            commandWithArg[1] = input.replaceFirst(commandWithArg[0] + " ", "");
+        }
+        return commandWithArg;
     }
 }

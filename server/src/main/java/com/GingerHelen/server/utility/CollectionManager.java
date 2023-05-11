@@ -119,7 +119,8 @@ public class CollectionManager {
      * @return рандомный элемент с минимальным значением поля House
      */
     public Flat minByHouse() {
-        return collection.values().stream().min(Comparator.comparing(Flat::getHouse)).get();
+        Optional<Flat> minOptional = collection.values().stream().min(Comparator.comparing(Flat::getHouse));
+        return minOptional.orElse(null);
     }
 
     /**
@@ -153,6 +154,6 @@ public class CollectionManager {
      */
     public void update(Integer id, Flat newValue) {
         newValue.setId(id);
-        collection.entrySet().stream().filter(e -> e.getValue().getId().equals(id)).findFirst().get().setValue(newValue);
+        collection.entrySet().stream().filter(e -> e.getValue().getId().equals(id)).findFirst().ifPresent(e -> e.setValue(newValue));
     }
 }

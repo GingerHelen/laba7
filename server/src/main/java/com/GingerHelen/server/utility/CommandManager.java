@@ -6,10 +6,7 @@ import com.GingerHelen.common.utility.Response;
 import com.GingerHelen.common.utility.ResponseCode;
 
 import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Queue;
+import java.util.*;
 
 
 /**
@@ -52,8 +49,9 @@ public class CommandManager {
      */
     public Response executeCommand(String stringCommand, String argument, Object objArg) {
         Response response;
-        if (commands.stream().anyMatch(e -> e.getName().equals(stringCommand))) {
-            Command command = commands.stream().filter(e -> e.getName().equals(stringCommand)).findFirst().get();
+        Optional<Command> commandOptional = commands.stream().filter(e -> e.getName().equals(stringCommand)).findFirst();
+        if (commandOptional.isPresent()) {
+            Command command = commandOptional.get();
             response = command.execute(argument, objArg);
             addToHistory(command);
         } else {
@@ -82,7 +80,6 @@ public class CommandManager {
             collectionManager.save();
             return true;
         } catch (IOException e) {
-            System.out.println("error during saving");
             return false;
         }
     }

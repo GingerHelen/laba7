@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * главный класс клиентского приложения
@@ -21,6 +23,9 @@ public class Client {
     private static final int NUMBER_OF_ARGS = 2;
 
     public static void main(String[] args) {
+        ResourceBundle res = ResourceBundle.getBundle("resources");
+        Locale locale = Locale.getDefault();
+
         if (args.length != NUMBER_OF_ARGS) {
             System.out.println("Программа не может быть запущена, вам нужно указать host name, port сервера в заданном порядке");
             return;

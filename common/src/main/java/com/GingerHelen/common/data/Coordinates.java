@@ -4,24 +4,10 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Coordinates implements Serializable {
-    private int x;
-    private long y;
+    private final int x;
+    private final long y;
     public Coordinates(int x, long y) {
         this.x = x;
-        this.y = y;
-    }
-    public Coordinates() {
-    }
-    public int getX() {
-        return x;
-    }
-    public long getY() {
-        return y;
-    }
-    public void setX(int x) {
-        this.x = x;
-    }
-    public void setY(long y) {
         this.y = y;
     }
 

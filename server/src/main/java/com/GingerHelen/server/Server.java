@@ -63,15 +63,7 @@ public class Server {
         try (DatagramChannel server = DatagramChannel.open()) {
             server.bind(address).configureBlocking(false);
             logger.info("datagram channel opened on address " + address);
-            BufferedInputStream bf = new BufferedInputStream(Files.newInputStream(path));
-            BufferedReader reader = new BufferedReader(new InputStreamReader(bf, StandardCharsets.UTF_8));
-            StringBuilder b = new StringBuilder("\n");
-            String currentLine = reader.readLine();
-            while (currentLine != null) {
-                b.append(currentLine);
-                currentLine = reader.readLine();
-            }
-            TreeMap<Long, Flat> flats = Parser.deSerialize(b.toString());
+            TreeMap<Long, Flat> flats = getCollection(path);
             logger.info("collection had been read");
             CollectionManager collectionManager = new CollectionManager(flats, args[FILEPATH_INDEX]);
             CommandManager commandManager = new CommandManager(collectionManager);
@@ -82,5 +74,17 @@ public class Server {
         } catch (ClassNotFoundException | InterruptedException e) {
             logger.error("error");
         }
+    }
+
+    private static TreeMap<Long, Flat> getCollection(Path path) throws IOException {
+        BufferedInputStream bf = new BufferedInputStream(Files.newInputStream(path));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(bf, StandardCharsets.UTF_8));
+        StringBuilder b = new StringBuilder("\n");
+        String currentLine = reader.readLine();
+        while (currentLine != null) {
+            b.append(currentLine);
+            currentLine = reader.readLine();
+        }
+        return Parser.deSerialize(b.toString());
     }
 }

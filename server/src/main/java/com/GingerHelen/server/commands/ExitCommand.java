@@ -9,7 +9,7 @@ import com.GingerHelen.common.utility.ResponseCode;
  */
 public class ExitCommand extends Command {
     public ExitCommand() {
-        super("exit", "завершить программу (без сохранения в файл!)", Requirement.NONE);
+        super("exit", "завершить программу", Requirement.NONE);
     }
 
     /**

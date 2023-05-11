@@ -13,7 +13,7 @@ public class InsertCommand extends Command {
     private final CollectionManager collectionManager;
 
     public InsertCommand(CollectionManager collectionManager) {
-        super("insert","добавить новый элемент с заданным ключом", Requirement.FLATARGUMENT);
+        super("insert","add a new element with the specified key", Requirement.FLATARGUMENT);
         this.collectionManager = collectionManager;
     }
 

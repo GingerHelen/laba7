@@ -14,7 +14,7 @@ public class HistoryCommand extends Command {
     private final Queue<Command> history;
 
     public HistoryCommand(Queue<Command> history) {
-        super("history", "вывести последние 8 команд без аргументов", Requirement.NONE);
+        super("history", "output the last 8 commands without arguments", Requirement.NONE);
         this.history = history;
     }
 

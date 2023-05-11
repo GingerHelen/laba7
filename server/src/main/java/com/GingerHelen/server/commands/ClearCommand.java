@@ -11,7 +11,7 @@ import com.GingerHelen.common.utility.ResponseCode;
 public class ClearCommand extends Command {
     private final CollectionManager collectionManager;
     public ClearCommand(CollectionManager collectionManager) {
-        super("clear", "очистить коллекцию", Requirement.NONE);
+        super("clear", "clear the collection", Requirement.NONE);
         this.collectionManager = collectionManager;
      }
 

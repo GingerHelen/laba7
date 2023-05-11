@@ -14,7 +14,7 @@ public class UpdateIdCommand extends Command {
     private final CollectionManager collectionManager;
 
     public UpdateIdCommand(CollectionManager collectionManager){
-        super("update","обновить значение элемента коллекции, id которого равен заданному", Requirement.FLATARGUMENT);
+        super("update","update the value of a collection item whose id is equal to the specified one", Requirement.FLATARGUMENT);
         this.collectionManager = collectionManager;
     }
 

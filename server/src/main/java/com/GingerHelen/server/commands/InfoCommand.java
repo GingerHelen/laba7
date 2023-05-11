@@ -14,7 +14,7 @@ public class InfoCommand extends Command {
 
 
     public InfoCommand(CollectionManager collectionManager) {
-        super("info","вывести информацию о коллекции (тип, дата инициализации, количество элементов и т.д. )",
+        super("info","output information about the collection (type, initialization date, number of items, etc)",
                 Requirement.NONE);
         this.collectionManager = collectionManager;
     }

@@ -13,7 +13,7 @@ public class RemoveLowerCommand extends Command {
     private final CollectionManager collectionManager;
 
     public RemoveLowerCommand(CollectionManager collectionManager) {
-        super("remove_lower"," удалить из коллекции все элементы, меньшие, чем заданный", Requirement.FLAT);
+        super("remove_lower"," remove all items smaller than the specified one from the collection", Requirement.FLAT);
         this.collectionManager = collectionManager;
     }
 

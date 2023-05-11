@@ -11,7 +11,7 @@ import com.GingerHelen.common.utility.ResponseCode;
 public class RemoveKeyCommand extends Command {
     private final CollectionManager collectionManager;
     public RemoveKeyCommand(CollectionManager collectionManager){
-        super("remove_key","удалить элемент из коллекции по его ключу", Requirement.ARGUMENT);
+        super("remove_key","remove an item from the collection by its key", Requirement.ARGUMENT);
         this.collectionManager = collectionManager;
     }
 

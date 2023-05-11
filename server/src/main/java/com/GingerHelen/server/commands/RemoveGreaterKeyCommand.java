@@ -12,7 +12,7 @@ import com.GingerHelen.common.utility.ResponseCode;
 public class RemoveGreaterKeyCommand extends Command {
     private final CollectionManager collectionManager;
     public RemoveGreaterKeyCommand(CollectionManager collectionManager) {
-        super("remove_greater_key","удалить из коллекции все элементы, ключ которых превышает заданный",
+        super("remove_greater_key","remove from the collection all items whose key exceeds the specified one",
                 Requirement.ARGUMENT);
         this.collectionManager = collectionManager;
     }

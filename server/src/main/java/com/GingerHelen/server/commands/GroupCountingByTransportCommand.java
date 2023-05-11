@@ -17,8 +17,8 @@ public class GroupCountingByTransportCommand extends Command {
     private final CollectionManager collectionManager;
 
     public GroupCountingByTransportCommand(CollectionManager collectionManager) {
-        super("group_counting_by_transport", "сгруппировать элементы коллекции по значению поля transport, " +
-                "вывести количество элементов в каждой группе", Requirement.NONE);
+        super("group_counting_by_transport", "group the collection items by the value of the transport field, " +
+                "output the number of items in each group", Requirement.NONE);
         this.collectionManager = collectionManager;
     }
 

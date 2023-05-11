@@ -12,8 +12,7 @@ import com.GingerHelen.common.utility.ResponseCode;
 public class MinByHouseCommand extends Command {
     private final CollectionManager collectionManager;
     public MinByHouseCommand(CollectionManager collectionManager) {
-        super("min_by_house","вывести любой объект из коллекции, значение поля house которого является" +
-                " минимальным", Requirement.NONE);
+        super("min_by_house","output any object from the collection whose house field value is minimal", Requirement.NONE);
         this.collectionManager = collectionManager;
     }
 

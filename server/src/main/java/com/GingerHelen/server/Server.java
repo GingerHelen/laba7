@@ -34,18 +34,18 @@ public class Server {
 
     public static void main(String[] args) throws IOException {
         if (args.length != NUMBER_OF_ARGS) {
-            logger.error("Программа не может быть запущена, вам нужно указать host name, port и file path в заданном порядке");
+            logger.error("The program cannot be started, you need to enter host name, server port and file path in the given order");
             return;
         }
         int port;
         try {
             port = Integer.parseInt(args[PORT_INDEX]);
         } catch (NumberFormatException e) {
-            logger.error("Порт должен задаваться целым числом");
+            logger.error("The port must be an integer number");
             return;
         }
         if (port < MIN_PORT || port > MAX_PORT) {
-            logger.error("Порт - число от 1 до 65535");
+            logger.error("The port is a number from 1 to 65535");
             return;
         }
         InetSocketAddress address = new InetSocketAddress(args[HOST_INDEX], port);

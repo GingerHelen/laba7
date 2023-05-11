@@ -15,7 +15,7 @@ public class HelpCommand extends Command {
     private final ArrayList<Command> commands;
 
     public HelpCommand(ArrayList<Command> commands) {
-        super("help","вывести справку по доступным командам", Requirement.NONE);
+        super("help","output help for available commands", Requirement.NONE);
         this.commands = commands;
     }
 
@@ -28,7 +28,7 @@ public class HelpCommand extends Command {
             new Response(ResponseCode.ERROR, "this command doesn't need an argument");
         }
         StringJoiner response = new StringJoiner("\n");
-        response.add("Список доступных комманд:");
+        response.add("List of available commands:");
         for (Command command : commands) {
             response.add(command.getName() + ": " + command.getDescription());
         }

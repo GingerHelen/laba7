@@ -27,18 +27,18 @@ public class Client {
         Locale locale = Locale.getDefault();
 
         if (args.length != NUMBER_OF_ARGS) {
-            System.out.println("Программа не может быть запущена, вам нужно указать host name, port сервера в заданном порядке");
+            System.out.println("The program cannot be started, you need to enter host name, server port in the given order");
             return;
         }
         int port;
         try {
             port = Integer.parseInt(args[PORT_INDEX]);
         } catch (NumberFormatException e) {
-            System.out.println("Порт должен задаваться целым числом");
+            System.out.println("The port must be an integer number");
             return;
         }
         if (port < MIN_PORT || port > MAX_PORT) {
-            System.out.println("Порт - число от 1 до 65535");
+            System.out.println("The port is a number from 1 to 65535");
             return;
         }
         InetSocketAddress server = new InetSocketAddress(args[HOST_INDEX], port);

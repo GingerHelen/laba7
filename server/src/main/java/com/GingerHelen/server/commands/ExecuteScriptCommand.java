@@ -9,7 +9,7 @@ import com.GingerHelen.common.utility.ResponseCode;
  */
 public class ExecuteScriptCommand extends Command {
     public ExecuteScriptCommand() {
-        super("execute_script", "считать и исполнить скрипт из указанного файла", Requirement.ARGUMENT);
+        super("execute_script", "read and execute the script from the specified file", Requirement.ARGUMENT);
     }
 
     /**

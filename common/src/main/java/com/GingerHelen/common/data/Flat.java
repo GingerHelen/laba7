@@ -1,12 +1,16 @@
 package com.GingerHelen.common.data;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-
+@Getter
+@Setter
 public class Flat implements Comparable<Flat>, Serializable {
-    private Integer id;
+    private Long id;
 
     private String name;
 
@@ -26,9 +30,10 @@ public class Flat implements Comparable<Flat>, Serializable {
 
     private final House house;
     private final int hashcode;
+    private final String owner;
 
     public Flat(String name, Coordinates coordinates, Long area, long numberOfRooms,
-                Furnish furnish, View view, Transport transport, House house) {
+                Furnish furnish, View view, Transport transport, House house, String owner) {
         this.name = name;
         this.coordinates = coordinates;
         this.area = area;
@@ -40,30 +45,7 @@ public class Flat implements Comparable<Flat>, Serializable {
         this.creationDate = LocalDateTime.now();
 
         hashcode = Objects.hash(name, coordinates, house, transport, furnish);
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Transport getTransport() {
-        return transport;
-    }
-
-    public House getHouse() {
-        return house;
+        this.owner = owner;
     }
 
     @Override

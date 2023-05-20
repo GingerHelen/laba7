@@ -17,6 +17,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.TreeMap;
 /**
@@ -27,14 +30,17 @@ public class Server {
     private static final int HOST_INDEX = 0;
     private static final int PORT_INDEX = 1;
     private static final int FILEPATH_INDEX = 2;
+    private static final int DB_URL_INDEX = 3;
+    private static final int DB_USERNAME_INDEX = 4;
+    private static final int DB_PASSWORD_INDEX = 5;
     private static final int MAX_PORT = 65535;
     private static final int MIN_PORT = 1;
-    private static final int NUMBER_OF_ARGS = 3;
+    private static final int NUMBER_OF_ARGS = 6;
     private static final Logger logger = LoggerFactory.getLogger(Server.class);
 
     public static void main(String[] args) throws IOException {
         if (args.length != NUMBER_OF_ARGS) {
-            logger.error("The program cannot be started, you need to enter host name, server port and file path in the given order");
+            logger.error("The program cannot be started, you need to enter host name, server port, file path, url, username and password in the given order");
             return;
         }
         int port;
@@ -60,7 +66,8 @@ public class Server {
             return;
         }
 
-        try (DatagramChannel server = DatagramChannel.open()) {
+        try (DatagramChannel server = DatagramChannel.open();
+             Connection connection = DriverManager.getConnection(args[DB_URL_INDEX], args[DB_USERNAME_INDEX], args[DB_PASSWORD_INDEX]) {
             server.bind(address).configureBlocking(false);
             logger.info("datagram channel opened on address " + address);
             TreeMap<Long, Flat> flats = getCollection(path);
@@ -73,6 +80,8 @@ public class Server {
             logger.error("wrong json syntax");
         } catch (ClassNotFoundException | InterruptedException e) {
             logger.error("error");
+        } catch (SQLException e) {
+            logger.error("error with connection to database");
         }
     }
 

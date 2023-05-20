@@ -1,8 +1,12 @@
 package com.GingerHelen.common.data;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.Objects;
-
+@Setter
+@Getter
 public class Coordinates implements Serializable {
     private final int x;
     private final long y;
@@ -32,4 +36,5 @@ public class Coordinates implements Serializable {
     public int hashCode() {
         return Objects.hash(x, y);
     }
+
 }

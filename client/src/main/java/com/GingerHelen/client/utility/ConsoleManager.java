@@ -52,7 +52,7 @@ public class ConsoleManager {
                 String argument = commandWithArg[1];
 
                 if (requirements.containsKey(inputCommand)) {
-                    Request request = new Request(inputCommand, argument, Locale.getDefault());
+                    Request request = new Request(inputCommand, argument, Locale.getDefault(), user);
                     Requirement requirement = requirements.get(inputCommand);
                     if (requirement == Requirement.FLAT || requirement == Requirement.FLATARGUMENT) {
                         try {

@@ -1,7 +1,12 @@
 package com.GingerHelen.common.data;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
+@Getter
+@Setter
 public class House implements Comparable<House>, Serializable {
     private String name; //Поле не может быть null
     private final Long year; //Поле может быть null, Значение поля должно быть больше 0
@@ -15,14 +20,6 @@ public class House implements Comparable<House>, Serializable {
         this.numberOfFloors = numberOfFloors;
         this.numberOfFlatsOnFloor = numberOfFlatsOnFloor;
         this.numberOfLifts = numberOfLifts;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override

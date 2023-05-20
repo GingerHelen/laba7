@@ -20,7 +20,7 @@ public class Client {
     private final static int PORT_INDEX = 1;
     private static final int MAX_PORT = 65535;
     private static final int MIN_PORT = 1;
-    private static final int NUMBER_OF_ARGS = 2;
+    private static final int NUMBER_OF_ARGS = 3;
 
     public static void main(String[] args) {
         ResourceBundle res = ResourceBundle.getBundle("resources");

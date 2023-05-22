@@ -74,7 +74,7 @@ public class Server {
             logger.info("collection had been read");
             CollectionManager collectionManager = new CollectionManager(flats, args[FILEPATH_INDEX]);
             CommandManager commandManager = new CommandManager(collectionManager);
-            RequestManager requestManager = new RequestManager(server, commandManager, new Scanner(System.in), logger);
+            RequestManager requestManager = new RequestManager(server, commandManager, new Scanner(System.in), logger, userManager);
             requestManager.start();
         } catch (JsonSyntaxException e) {
             logger.error("wrong json syntax");

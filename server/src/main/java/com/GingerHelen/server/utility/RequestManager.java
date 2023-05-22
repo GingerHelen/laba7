@@ -1,9 +1,6 @@
 package com.GingerHelen.server.utility;
 
-import com.GingerHelen.common.utility.Request;
-import com.GingerHelen.common.utility.Serializer;
-import com.GingerHelen.common.utility.StartRequest;
-import com.GingerHelen.common.utility.StartResponse;
+import com.GingerHelen.common.utility.*;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -23,12 +20,14 @@ public class RequestManager {
     private final DatagramChannel server;
     private final CommandManager commandManager;
     private final Scanner scanner;
+    private final UserManager userManager;
 
-    public RequestManager(DatagramChannel server, CommandManager commandManager, Scanner scanner, Logger logger) {
+    public RequestManager(DatagramChannel server, CommandManager commandManager, Scanner scanner, Logger logger, UserManager userManager) {
         this.server = server;
         this.commandManager = commandManager;
         this.scanner = scanner;
         this.logger = logger;
+        this.userManager = userManager;
     }
 
     public void start() throws IOException, ClassNotFoundException, InterruptedException {
@@ -62,7 +61,14 @@ public class RequestManager {
 
     private Object handleRequest(Object request) {
         if (request instanceof StartRequest) {
-            return new StartResponse(commandManager.getCommandsWithRequirements());
+            if (!userManager.checkUsername(((StartRequest) request).getUser().getUsername())) {
+                userManager.register(((StartRequest) request).getUser());
+                return new StartResponse(commandManager.getCommandsWithRequirements(), AuthorizationCode.REGISTRATION);
+            }
+            if (userManager.checkPassword(((StartRequest) request).getUser().getUsername(), ((StartRequest) request).getUser().getPassword())) {
+                return new StartResponse(commandManager.getCommandsWithRequirements(), AuthorizationCode.AUTHORIZATION);
+            }
+            return new StartResponse(AuthorizationCode.ERROR);
         }
         return commandManager.executeCommand(((Request) request).getCommandName(), ((Request) request).getArgument(),
                 ((Request) request).getObject());

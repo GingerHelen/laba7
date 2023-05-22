@@ -1,10 +1,14 @@
 package com.GingerHelen.server.utility;
 
+import com.GingerHelen.common.data.Coordinates;
 import com.GingerHelen.common.data.Flat;
 import com.GingerHelen.common.utility.User;
 import org.slf4j.Logger;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class DatabaseManager {
     private static final int NAME_INDEX = 1;
@@ -82,7 +86,7 @@ public class DatabaseManager {
 
     private void prepareStatement(PreparedStatement statement, Flat flat) throws SQLException {
         statement.setString(NAME_INDEX, flat.getName());
-        statement.setDouble(X_INDEX, flat.getCoordinates().getX());
+        statement.setInt(X_INDEX, flat.getCoordinates().getX());
         statement.setLong(Y_INDEX, flat.getCoordinates().getY());
         statement.setLong(AREA_INDEX, flat.getArea());
         statement.setLong(NUMBER_OF_ROOMS_INDEX, flat.getNumberOfRooms());
@@ -157,5 +161,19 @@ public class DatabaseManager {
             return false;
         }
         return true;
+    }
+    public HashMap<Long, Flat> getDataTable() { //TODO
+        try {
+            createTable();
+            HashMap<Long, Flat> hashflat = new HashMap<>();
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery("SELECT * FROM " + tableName);
+            while (result.next()) {
+                hashflat.put(result.getLong("key"), new Flat(result.getString("name"), new Coordinates(result.getInt("x"), result.getLong("y"))))
+            } return hashflat;
+        } catch (SQLException e) {
+            logger.error("error during getting data table");
+            return null;
+        }
     }
 }

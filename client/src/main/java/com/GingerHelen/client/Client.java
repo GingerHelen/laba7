@@ -23,8 +23,6 @@ public class Client {
     private static final int NUMBER_OF_ARGS = 3;
 
     public static void main(String[] args) {
-        ResourceBundle res = ResourceBundle.getBundle("resources");
-        Locale locale = Locale.getDefault();
 
         if (args.length != NUMBER_OF_ARGS) {
             System.out.println("The program cannot be started, you need to enter host name, server port in the given order");

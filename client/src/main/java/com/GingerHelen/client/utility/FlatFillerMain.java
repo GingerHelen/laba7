@@ -86,8 +86,8 @@ public class FlatFillerMain {
     }
 
 
-    public Flat fillFlat() throws ScriptException, InvalidInputException, IOException {
+    public Flat fillFlat(String username) throws ScriptException, InvalidInputException, IOException {
         return new Flat(this.fillName(), this.fillCoordinates(), this.fillArea(), this.fillNumberOfRooms(), this.fillFurnish(),
-                this.fillView(), this.fillTransport(), this.fillHouse());
+                this.fillView(), this.fillTransport(), this.fillHouse(), username);
     }
 }

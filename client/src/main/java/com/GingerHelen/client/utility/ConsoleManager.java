@@ -22,6 +22,8 @@ public class ConsoleManager {
     private final DatagramSocket client;
     private final FlatFillerMain filler;
 
+    private HashMap<String, Requirement> commands;
+    private User user;
     public ConsoleManager(SocketAddress server, InputManager inputManager, OutputManager outputManager, DatagramSocket client,
                           FlatFillerMain filler) {
         this.server = server;
@@ -39,10 +41,8 @@ public class ConsoleManager {
      *  @throws NoConnectionException сервер временно (а может не временно) недоступен
      */
     public void start() throws InvalidInputException, IOException, ClassNotFoundException, NoConnectionException {
-        send(new StartRequest());
-        HashMap<String, Requirement> requirements = ((StartResponse) receive()).getCommands();
-
         outputManager.println("The program is ready!!");
+        authorize();
         boolean isWorking = true;
         while (isWorking) {
             String input = inputManager.read();
@@ -51,12 +51,12 @@ public class ConsoleManager {
                 String inputCommand = commandWithArg[0];
                 String argument = commandWithArg[1];
 
-                if (requirements.containsKey(inputCommand)) {
-                    Request request = new Request(inputCommand, argument, Locale.getDefault(), user);
-                    Requirement requirement = requirements.get(inputCommand);
+                if (commands.containsKey(inputCommand)) {
+                    Request request = new Request(inputCommand, argument, user);
+                    Requirement requirement = commands.get(inputCommand);
                     if (requirement == Requirement.FLAT || requirement == Requirement.FLATARGUMENT) {
                         try {
-                            request.setObject(filler.fillFlat());
+                            request.setObject(filler.fillFlat(user.getUsername()));
                         } catch (ScriptException e) {
                             outputManager.printlnImportantMessage("invalid flat value in script");
                             inputManager.finishReadScript();
@@ -137,5 +137,24 @@ public class ConsoleManager {
             commandWithArg[1] = input.replaceFirst(commandWithArg[0] + " ", "");
         }
         return commandWithArg;
+    }
+
+    private void authorize() throws InvalidInputException, IOException, NoConnectionException, ClassNotFoundException {
+        boolean isAuthorized = false;
+        do {
+            outputManager.print("enter username:");
+            String newUsername = inputManager.read();
+            outputManager.print("enter password:");
+            String newPassword = inputManager.read();
+            send(new StartRequest(new User(newUsername, newPassword)));
+            StartResponse response = (StartResponse) receive();
+            if (response.getAuthorizationCode() == AuthorizationCode.AUTHORIZATION
+                    || response.getAuthorizationCode() == AuthorizationCode.REGISTRATION) {
+                isAuthorized = true;
+                commands = response.getCommands();
+                user = new User(newUsername, newPassword);
+            }
+            outputManager.printlnImportantMessage(response.getAuthorizationCode().getMessage());
+        } while (!isAuthorized);
     }
 }

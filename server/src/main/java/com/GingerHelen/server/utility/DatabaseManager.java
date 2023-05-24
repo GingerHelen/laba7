@@ -1,14 +1,10 @@
 package com.GingerHelen.server.utility;
 
-import com.GingerHelen.common.data.Coordinates;
-import com.GingerHelen.common.data.Flat;
-import com.GingerHelen.common.utility.User;
+import com.GingerHelen.common.data.*;
 import org.slf4j.Logger;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.TreeMap;
 
 public class DatabaseManager {
     private static final int NAME_INDEX = 1;
@@ -24,10 +20,10 @@ public class DatabaseManager {
     private static final int FURNISH_INDEX = 11;
     private static final int VIEW_INDEX = 12;
     private static final int TRANSPORT_INDEX = 13;
-    private static final int ID_INDEX = 14;
-    private static final int CREATION_DATE_INDEX = 15;
-    private static final int OWNER_INDEX = 16;
-    private static final int KEY_INDEX = 17;
+    private static final int CREATION_DATE_INDEX = 14;
+    private final static int OWNER_INDEX = 15;
+    private static final int ID_INDEX = 16;
+    private final static int KEY_INDEX = 17;
     private final Connection connection;
     private final String tableName;
     private final String tableUsers;
@@ -63,28 +59,29 @@ public class DatabaseManager {
                 + "FOREIGN KEY(owner) REFERENCES " + tableUsers + "(username))");
     }
 
-    public void createUsersTableName() throws SQLException {
-        Statement statement = connection.createStatement();
-        statement.execute("CREATE TABLE IF NOT EXIST" + tableUsers + "(userName VARCHAR(100) NOT NULL PRIMARY KEY, " +
-                "password VARCHAR(100) NOT NULL");
-    }
-
-    public Long insert(Long key, Flat flat) {
+    public Integer insert(Long key, Flat flat) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + tableName + "(id,name,x,y,"
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + tableName + "(name,x,y,"
                     + "area,number_of_rooms,name_house,"
-                    + "year_house, number_of_floors, number_of_flats, number_of_lifts, furnish, view, transport,creation_date,owner,key) VALUES (default,?,"
-                    + "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) RETURNING id");
+                    + "year_house, number_of_floors, number_of_flats, number_of_lifts, furnish, view, transport, creation_date, owner, id, key) VALUES (?,"
+                    + "?,?,?,?,?,?,?,?,?,?,?,?,?,?,default,?) RETURNING id");
+            prepareStatement(preparedStatement, flat, key);
             ResultSet result = preparedStatement.executeQuery();
             result.next();
-            return result.getLong("id");
+            return result.getInt("id");
         } catch (SQLException e) {
             logger.error("error during inserting new object");
             return null;
         }
     }
 
+    private void prepareStatement(PreparedStatement statement, Flat flat, Long key) throws SQLException {
+        prepareStatement(statement, flat);
+        statement.setLong(KEY_INDEX, key);
+    }
+
     private void prepareStatement(PreparedStatement statement, Flat flat) throws SQLException {
+        statement.setInt(ID_INDEX, flat.getId());
         statement.setString(NAME_INDEX, flat.getName());
         statement.setInt(X_INDEX, flat.getCoordinates().getX());
         statement.setLong(Y_INDEX, flat.getCoordinates().getY());
@@ -92,13 +89,13 @@ public class DatabaseManager {
         statement.setLong(NUMBER_OF_ROOMS_INDEX, flat.getNumberOfRooms());
         statement.setString(NAME_HOUSE_INDEX, flat.getHouse().getName());
         if (flat.getHouse().getYear() != null) {
-            statement.setString(YEAR_HOUSE_INDEX, String.valueOf(flat.getHouse().getYear()));
+            statement.setLong(YEAR_HOUSE_INDEX, flat.getHouse().getYear());
         } else {
             statement.setNull(YEAR_HOUSE_INDEX, Types.NULL);
         }
-        statement.setDouble(NUMBER_OF_FLOORS_INDEX, flat.getHouse().getNumberOfFloors());
-        statement.setDouble(NUMBER_OF_FLATS_INDEX, flat.getHouse().getNumberOfFlatsOnFloor());
-        statement.setDouble(NUMBER_OF_LIFTS_INDEX, flat.getHouse().getNumberOfLifts());
+        statement.setInt(NUMBER_OF_FLOORS_INDEX, flat.getHouse().getNumberOfFloors());
+        statement.setLong(NUMBER_OF_FLATS_INDEX, flat.getHouse().getNumberOfFlatsOnFloor());
+        statement.setLong(NUMBER_OF_LIFTS_INDEX, flat.getHouse().getNumberOfLifts());
         if (flat.getFurnish() != null) {
             statement.setString(FURNISH_INDEX, String.valueOf(flat.getFurnish()));
         } else {
@@ -110,15 +107,18 @@ public class DatabaseManager {
         } else {
             statement.setNull(TRANSPORT_INDEX, Types.NULL);
         }
+        statement.setTimestamp(CREATION_DATE_INDEX, new Timestamp(flat.getCreationDate().getTime()));
+        statement.setString(OWNER_INDEX, flat.getOwner());
     }
 
-    public boolean update(long id, Flat flat) {
+
+    public boolean update(Integer id, Flat flat) {
+        flat.setId(id);
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE " + tableName + " SET "
                     + "name=?, x=?, y=?, area=?, number_of_rooms=?, name_house=?,year_house=?, number_of_floors=?, number_of_flats=?, " +
-                    "number_of_lifts=?, furnish=?, view=?, transport=? WHERE id=?");
+                    "number_of_lifts=?, furnish=?, view=?, transport=?, creation_date=?, owner=? WHERE id=?");
             prepareStatement(preparedStatement, flat);
-            preparedStatement.setLong(ID_INDEX, id);
             preparedStatement.execute();
         } catch (SQLException e) {
             logger.error("error during updating object from table", e);
@@ -144,7 +144,7 @@ public class DatabaseManager {
         try {
             PreparedStatement statement = connection.prepareStatement("DELETE FROM" + tableName + "WHERE owner=?");
             statement.setString(1, username);
-            statement.executeUpdate();
+            statement.execute();
         } catch (SQLException e) {
             logger.error("error during deleting objects");
             return false;
@@ -154,22 +154,31 @@ public class DatabaseManager {
 
     public boolean removeGreater(String username, Long key) {
         try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM" + tableName + "WHERE key>?");
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM" + tableName + "WHERE key>? AND owner=?");
             statement.setLong(1, key);
+            statement.setString(2, username);
+            statement.execute();
         } catch (SQLException e) {
             logger.error("error during removing greater keys");
             return false;
         }
         return true;
     }
-    public HashMap<Long, Flat> getDataTable() { //TODO
+    public TreeMap<Long, Flat> getDataTable() {
         try {
             createTable();
-            HashMap<Long, Flat> hashflat = new HashMap<>();
+            TreeMap<Long, Flat> hashflat = new TreeMap<>();
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery("SELECT * FROM " + tableName);
             while (result.next()) {
-                hashflat.put(result.getLong("key"), new Flat(result.getString("name"), new Coordinates(result.getInt("x"), result.getLong("y"))))
+                hashflat.put(result.getLong("key"), new Flat(result.getString("name"), new Coordinates(result.getInt("x"),
+                        result.getLong("y")),
+                        result.getLong("area"), result.getLong("number_of_rooms"),
+                        Furnish.valueOf(result.getString("furnish")), View.valueOf(result.getString("view")),
+                        Transport.valueOf(result.getString("transport")), new House(result.getString("name"),
+                        result.getLong("year_house"), result.getInt("number_of_floors"),
+                        result.getLong("number_of_flats"), result.getLong("number_of_lifts")),
+                        result.getString("owner")));
             } return hashflat;
         } catch (SQLException e) {
             logger.error("error during getting data table");

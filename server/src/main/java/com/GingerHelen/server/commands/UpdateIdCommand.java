@@ -24,7 +24,7 @@ public class UpdateIdCommand extends Command {
      * @param argument id, по которому будет изменен элемент
      */
     @Override
-    public Response execute(String argument, Object objArg) {
+    public Response execute(String argument, Object objArg, String username) {
         if (argument.isEmpty() || objArg == null) {
             return new Response(ResponseCode.ERROR, "this command needs a number argument (id) and object argument");
         }
@@ -33,7 +33,7 @@ public class UpdateIdCommand extends Command {
             if (!collectionManager.containsId(id)) {
                 return new Response(ResponseCode.ERROR,"no element to update");
             }
-            collectionManager.update(id, (Flat) objArg);
+            collectionManager.update(id, (Flat) objArg, username);
             return new Response(ResponseCode.OK);
         } catch(NumberFormatException e) {
             return new Response(ResponseCode.ERROR,"id should be a number");

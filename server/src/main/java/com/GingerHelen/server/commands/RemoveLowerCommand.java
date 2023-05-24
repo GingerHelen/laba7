@@ -23,11 +23,11 @@ public class RemoveLowerCommand extends Command {
      * @param argument аргумент должен быть пустой, чтобы команда сработала корректно
      */
     @Override
-    public Response execute(String argument, Object objArg) {
+    public Response execute(String argument, Object objArg, String username) {
         if (!argument.isEmpty() || objArg == null) {
             return new Response(ResponseCode.ERROR, "this command doesn't need an argument, but need an object argument");
         }
-        collectionManager.removeLower((Flat) objArg);
+        collectionManager.removeLower((Flat) objArg, username);
         return new Response(ResponseCode.OK);
     }
 }

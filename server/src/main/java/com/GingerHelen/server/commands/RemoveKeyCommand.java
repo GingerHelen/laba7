@@ -21,12 +21,12 @@ public class RemoveKeyCommand extends Command {
      * @param argument key, принадлежащий элементу, который будет удален
      */
     @Override
-    public Response execute(String argument, Object objArg) {
+    public Response execute(String argument, Object objArg, String username) {
         if (argument.isEmpty() || objArg != null) {
             return new Response(ResponseCode.ERROR, "this command needs a number argument (key)");
         }
         try {
-            collectionManager.remove(Long.parseLong(argument));
+            collectionManager.remove(username, Long.parseLong(argument));
             return new Response(ResponseCode.OK);
         } catch (NumberFormatException e) {
             return new Response(ResponseCode.ERROR, "this command needs a NUMBER argument!");

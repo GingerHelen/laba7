@@ -23,12 +23,12 @@ public class RemoveGreaterKeyCommand extends Command {
      * @param argument key, превышение которого у элемента ведет к его удалению
      */
     @Override
-    public Response execute(String argument, Object objArg) {
+    public Response execute(String argument, Object objArg, String username) {
         if (argument.isEmpty() || objArg != null) {
             return new Response(ResponseCode.ERROR, "this command needs a number argument (key)");
         }
         try {
-            collectionManager.removeGreaterKey(Long.parseLong(argument));
+            collectionManager.removeGreaterKey(username, Long.parseLong(argument));
             return new Response(ResponseCode.OK);
         } catch (NumberFormatException e) {
             return new Response(ResponseCode.ERROR, "this command needs a NUMBER argument!!!");

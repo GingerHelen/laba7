@@ -23,7 +23,7 @@ public class InsertCommand extends Command {
      * @param argument key, принадлежащий новому элементу
      */
     @Override
-    public Response execute(String argument, Object objArg) {
+    public Response execute(String argument, Object objArg, String username) {
         if (argument.isEmpty() || objArg == null) {
             new Response(ResponseCode.ERROR, "a command should contain a number argument and object argument");
         }

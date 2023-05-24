@@ -1,27 +1,19 @@
 package com.GingerHelen.server;
 
-import com.GingerHelen.server.utility.CollectionManager;
-import com.GingerHelen.server.utility.CommandManager;
-import com.GingerHelen.server.utility.Parser;
-import com.GingerHelen.server.utility.RequestManager;
+import com.GingerHelen.server.utility.*;
 import com.GingerHelen.common.data.Flat;
-import com.google.gson.JsonSyntaxException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.channels.DatagramChannel;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.TreeMap;
+import java.util.concurrent.ExecutionException;
+
 /**
  * главный класс серверного приложения
  */
@@ -29,18 +21,20 @@ import java.util.TreeMap;
 public class Server {
     private static final int HOST_INDEX = 0;
     private static final int PORT_INDEX = 1;
-    private static final int FILEPATH_INDEX = 2;
-    private static final int DB_URL_INDEX = 3;
-    private static final int DB_USERNAME_INDEX = 4;
-    private static final int DB_PASSWORD_INDEX = 5;
+    private static final int INDEX_DB_HOSTNAME = 2;
+    private static final int INDEX_DB_PORT = 3;
+    private static final int INDEX_DB_NAME = 4;
+    private static final int DB_USERNAME_INDEX = 5;
+    private static final int DB_PASSWORD_INDEX = 6;
     private static final int MAX_PORT = 65535;
     private static final int MIN_PORT = 1;
-    private static final int NUMBER_OF_ARGS = 6;
+    private static final int NUMBER_OF_ARGS = 7;
     private static final Logger logger = LoggerFactory.getLogger(Server.class);
 
     public static void main(String[] args) throws IOException {
         if (args.length != NUMBER_OF_ARGS) {
-            logger.error("The program cannot be started, you need to enter host name, server port, file path, url, username and password in the given order");
+            logger.error("The program cannot be started, you need to enter host name, server port, " +
+                    "db host, db port, db name, username and password in the given order");
             return;
         }
         int port;
@@ -59,41 +53,35 @@ public class Server {
             logger.error("Address is unresolved. Check host name");
             return;
         }
-        File file = new File(args[FILEPATH_INDEX]);
-        Path path = Paths.get(args[FILEPATH_INDEX]);
-        if (!file.exists()) {
-            logger.error("file not founded");
+
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            logger.error("cannot resolve driver for postgresql");
+            logger.error(e.getMessage());
             return;
         }
+        final String dataBaseUrl = "jdbc:postgresql://" + args[INDEX_DB_HOSTNAME] + ":" + args[INDEX_DB_PORT] + "/" + args[INDEX_DB_NAME];
 
         try (DatagramChannel server = DatagramChannel.open();
-             Connection connection = DriverManager.getConnection(args[DB_URL_INDEX], args[DB_USERNAME_INDEX], args[DB_PASSWORD_INDEX]) {
+             Connection connection = DriverManager.getConnection(dataBaseUrl, args[DB_USERNAME_INDEX], args[DB_PASSWORD_INDEX])) {
             server.bind(address).configureBlocking(false);
             logger.info("datagram channel opened on address " + address);
-            TreeMap<Long, Flat> flats = getCollection(path);
+            DatabaseManager databaseManager = new DatabaseManager(connection, "flatTable", "flatUsersTable", logger);
+            TreeMap<Long, Flat> flats = databaseManager.getDataTable();
+            UserManager userManager = new UserManager(connection, "flatUsersTable", logger);
             logger.info("collection had been read");
-            CollectionManager collectionManager = new CollectionManager(flats, args[FILEPATH_INDEX]);
+            CollectionManager collectionManager = new CollectionManager(flats, databaseManager);
             CommandManager commandManager = new CommandManager(collectionManager);
             RequestManager requestManager = new RequestManager(server, commandManager, new Scanner(System.in), logger, userManager);
             requestManager.start();
-        } catch (JsonSyntaxException e) {
-            logger.error("wrong json syntax");
         } catch (ClassNotFoundException | InterruptedException e) {
             logger.error("error");
         } catch (SQLException e) {
             logger.error("error with connection to database");
+            logger.error(e.getMessage());
+        } catch (ExecutionException e) {
+            logger.error(e.getMessage());
         }
-    }
-
-    private static TreeMap<Long, Flat> getCollection(Path path) throws IOException {
-        BufferedInputStream bf = new BufferedInputStream(Files.newInputStream(path));
-        BufferedReader reader = new BufferedReader(new InputStreamReader(bf, StandardCharsets.UTF_8));
-        StringBuilder b = new StringBuilder("\n");
-        String currentLine = reader.readLine();
-        while (currentLine != null) {
-            b.append(currentLine);
-            currentLine = reader.readLine();
-        }
-        return Parser.deSerialize(b.toString());
     }
 }

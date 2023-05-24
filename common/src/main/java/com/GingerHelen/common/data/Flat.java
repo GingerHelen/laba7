@@ -5,18 +5,19 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 
 @Getter
 @Setter
 public class Flat implements Comparable<Flat>, Serializable {
-    private Long id;
+    private Integer id;
 
     private String name;
 
     private final Coordinates coordinates;
 
-    private final LocalDateTime creationDate;
+    private final Date creationDate;
 
     private final Long area;
 
@@ -42,7 +43,7 @@ public class Flat implements Comparable<Flat>, Serializable {
         this.view = view;
         this.transport = transport;
         this.house = house;
-        this.creationDate = LocalDateTime.now();
+        this.creationDate = new Date();
 
         hashcode = Objects.hash(name, coordinates, house, transport, furnish);
         this.owner = owner;

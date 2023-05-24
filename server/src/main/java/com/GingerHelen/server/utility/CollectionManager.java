@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 public class CollectionManager {
     private TreeMap<Long, Flat> collection = new TreeMap<>();
     private final Date dateOfInitialization = new Date();
-    private String filePath;
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final DatabaseManager databaseManager;
 
@@ -46,7 +45,7 @@ public class CollectionManager {
      * @param flat
      */
     public boolean addToCollection(Long key, Flat flat) {
-        Long id = databaseManager.insert(key, flat);
+        Integer id = databaseManager.insert(key, flat);
         if (id != null) {
             flat.setId(id);
             lock.writeLock().lock();
@@ -82,7 +81,7 @@ public class CollectionManager {
     /**
      * @return true - в коллекции содержится элемент с заданным id, false - нет
      */
-    public boolean containsId(Long id) {
+    public boolean containsId(Integer id) {
         lock.readLock().lock();
         try {
             return collection.values().stream().anyMatch(v -> v.getId().equals(id));
@@ -107,7 +106,10 @@ public class CollectionManager {
     /**
      * удалить из коллекции элемент с заданным ключом
      */
-    public boolean remove(Long key) {
+    public boolean remove(String username, Long key) {
+        lock.readLock().lock();
+        if (collection.get(key).getOwner().equals(username)) {
+            lock.readLock().unlock();
         if (databaseManager.remove(key)) {
         lock.writeLock().lock();
         try {
@@ -118,6 +120,7 @@ public class CollectionManager {
     } else {
         return false;
         }
+    } return false;
     }
 
 
@@ -214,17 +217,26 @@ public class CollectionManager {
     /**
      * обновить элемент с заданным id
      */
-    public boolean update(Long id, Flat newValue) {
-        if (databaseManager.update(id, newValue)) {
-            lock.writeLock().lock();
-            try {
-                newValue.setId(id);
-                collection.entrySet().stream().filter(e -> e.getValue().getId().equals(id)).findFirst().ifPresent(e -> e.setValue(newValue));
-            } finally {
-                lock.writeLock().unlock();
-            } return true;
-        } else {
-            return true;
-        }
+    public boolean update(Integer id, Flat newValue, String username) {
+        Flat instance = getById(id);
+        if (instance != null) {
+            if (instance.getOwner().equals(username)){
+                lock.readLock().unlock();
+                if (databaseManager.update(id, newValue)) {
+                    lock.writeLock().lock();
+                    try {
+                        newValue.setId(id);
+                        collection.entrySet().stream().filter(e -> e.getValue().getId().equals(id)).findFirst().ifPresent(e -> e.setValue(newValue));
+                    } finally {
+                        lock.writeLock().unlock();
+                    }
+                }
+                return true;
+            }
+        } return false;
+    }
+    public Flat getById(Integer id) {
+        Optional<Flat> optional = collection.values().stream().filter(v -> v.getId().equals(id)).findFirst();
+        return optional.orElse(null);
     }
 }

@@ -29,7 +29,7 @@ public class GroupCountingByTransportCommand extends Command {
      * @param argument должен быть пустым для корректной работы программы
      */
     @Override
-    public Response execute(String argument, Object objArg) {
+    public Response execute(String argument, Object objArg, String username) {
         if (!argument.isEmpty() || objArg != null) {
             new Response(ResponseCode.ERROR, "this command doesn't need an argument");
         }

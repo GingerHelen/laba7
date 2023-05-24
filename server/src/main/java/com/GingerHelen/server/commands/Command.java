@@ -17,7 +17,7 @@ public abstract class Command {
         this.requirement = requirement;
     }
 
-    public abstract Response execute(String argument, Object objArg);
+    public abstract Response execute(String argument, Object objArg, String username);
 
     public String getName() {
         return name;

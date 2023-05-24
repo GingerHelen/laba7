@@ -12,13 +12,16 @@ import java.util.HashMap;
 public class StartResponse implements Serializable {
     private HashMap<String, Requirement> commands;
     private final AuthorizationCode authorizationCode;
+    private final String message;
 
-    public StartResponse(HashMap<String, Requirement> commands, AuthorizationCode authorizationCode) {
+    public StartResponse(HashMap<String, Requirement> commands, AuthorizationCode authorizationCode, String message) {
         this.commands = commands;
         this.authorizationCode = authorizationCode;
+        this.message = message;
     }
 
-    public StartResponse(AuthorizationCode authorizationCode) {
+    public StartResponse(AuthorizationCode authorizationCode, String message) {
+        this.message = message;
         this.authorizationCode = authorizationCode;
     }
 }

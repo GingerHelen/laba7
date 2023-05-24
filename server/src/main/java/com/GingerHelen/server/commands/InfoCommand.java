@@ -23,7 +23,7 @@ public class InfoCommand extends Command {
      * если аргумент пустой, команда выводит в консоль информацию о коллекции (тип, дата инциализации, количество элементов и тд.)
      * @param argument должен быть пустым для корректной работы программы
      */
-    public Response execute(String argument, Object objArg) {
+    public Response execute(String argument, Object objArg, String username) {
         if (!argument.isEmpty() || objArg != null) {
              new Response(ResponseCode.ERROR,"this command doesn't need an argument");
         }

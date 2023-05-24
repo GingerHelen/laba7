@@ -142,9 +142,9 @@ public class ConsoleManager {
     private void authorize() throws InvalidInputException, IOException, NoConnectionException, ClassNotFoundException {
         boolean isAuthorized = false;
         do {
-            outputManager.print("enter username:");
+            outputManager.print("enter username: ");
             String newUsername = inputManager.read();
-            outputManager.print("enter password:");
+            outputManager.print("enter password: ");
             String newPassword = inputManager.read();
             send(new StartRequest(new User(newUsername, newPassword)));
             StartResponse response = (StartResponse) receive();
@@ -154,7 +154,7 @@ public class ConsoleManager {
                 commands = response.getCommands();
                 user = new User(newUsername, newPassword);
             }
-            outputManager.printlnImportantMessage(response.getAuthorizationCode().getMessage());
+            outputManager.printlnImportantMessage(response.getMessage());
         } while (!isAuthorized);
     }
 }

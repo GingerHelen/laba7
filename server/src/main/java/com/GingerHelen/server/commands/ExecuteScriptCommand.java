@@ -18,7 +18,7 @@ public class ExecuteScriptCommand extends Command {
      * @param argument путь к файлу со скриптом
      */
     @Override
-    public Response execute(String argument, Object objArg) {
+    public Response execute(String argument, Object objArg, String username) {
         if(argument.isEmpty() || objArg != null) {
             return new Response(ResponseCode.ERROR, "the command should contain the filename as an argument");
         }

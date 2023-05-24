@@ -4,8 +4,6 @@ import com.GingerHelen.server.commands.*;
 import com.GingerHelen.common.utility.Requirement;
 import com.GingerHelen.common.utility.Response;
 import com.GingerHelen.common.utility.ResponseCode;
-
-import java.io.IOException;
 import java.util.*;
 
 
@@ -17,7 +15,6 @@ public class CommandManager {
     private final HashMap<String, Requirement> commandsWithRequirements = new HashMap<>();
     private final Queue<Command> history = new ArrayDeque<>();
     private final static int numberOfElements = 8;
-    private final CollectionManager collectionManager;
 
     public CommandManager(CollectionManager collectionManager) {
         commands.add(new ClearCommand(collectionManager));
@@ -38,7 +35,6 @@ public class CommandManager {
 
         commands.forEach(e -> commandsWithRequirements.put(e.getName(), e.getRequirement()));
 
-        this.collectionManager = collectionManager;
     }
 
     /**
@@ -47,12 +43,12 @@ public class CommandManager {
      * @param argument аргумент команды (может быть пустым)
      * @return executeFlag выполненной команды
      */
-    public Response executeCommand(String stringCommand, String argument, Object objArg) {
+    public Response executeCommand(String stringCommand, String argument, Object objArg, String username) {
         Response response;
         Optional<Command> commandOptional = commands.stream().filter(e -> e.getName().equals(stringCommand)).findFirst();
         if (commandOptional.isPresent()) {
             Command command = commandOptional.get();
-            response = command.execute(argument, objArg);
+            response = command.execute(argument, objArg, username);
             addToHistory(command);
         } else {
             return new Response(ResponseCode.ERROR, "no such command");
@@ -73,14 +69,5 @@ public class CommandManager {
 
     public HashMap<String, Requirement> getCommandsWithRequirements() {
         return commandsWithRequirements;
-    }
-
-    public boolean save() {
-        try {
-            collectionManager.save();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
     }
 }

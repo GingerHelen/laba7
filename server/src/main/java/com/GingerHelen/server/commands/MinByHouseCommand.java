@@ -21,7 +21,7 @@ public class MinByHouseCommand extends Command {
      * @param argument аргумент должен быть пустой, чтобы команда сработала корректно
      */
     @Override
-    public Response execute(String argument, Object objArg){
+    public Response execute(String argument, Object objArg, String username){
         if (!argument.isEmpty() || objArg != null) {
             return new Response(ResponseCode.ERROR, "the command shouldn't contain any argument and object argument");
         }

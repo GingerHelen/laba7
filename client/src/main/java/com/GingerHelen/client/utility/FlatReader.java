@@ -7,7 +7,6 @@ import com.GingerHelen.common.data.Transport;
 import com.GingerHelen.common.data.View;
 
 import java.io.IOException;
-import java.util.Locale;
 
 /**
  * класс с методами для чтения полей объекта типа Flat
@@ -38,28 +37,54 @@ public class FlatReader {
     }
 
       public View readView() throws IllegalArgumentException, InvalidInputException, IOException {
-        View view;
-        view = View.valueOf(inputManager.read().toUpperCase(Locale.ROOT));
-        return view;
+        switch (inputManager.read().trim()) {
+            case "1":
+               return View.STREET;
+            case "2":
+                return View.PARK;
+            case "3":
+                return View.BAD;
+            case "4":
+                return View.NORMAL;
+            case "5":
+                return View.TERRIBLE;
+            default:
+                throw new IllegalArgumentException("Enter a number from list");
+        }
     }
 
     public Transport readTransport() throws IllegalArgumentException, InvalidInputException, IOException {
-        Transport transport = null;
-        String stringTransport = inputManager.read();
-        if (!stringTransport.isEmpty()) {
-            transport = Transport.valueOf(stringTransport.toUpperCase(Locale.ROOT));
+        switch (inputManager.read().trim()) {
+            case "1":
+                return Transport.FEW;
+            case "2":
+                return Transport.NONE;
+            case "3":
+                return Transport.LITTLE;
+            case "4":
+                return Transport.NORMAL;
+            case "5":
+                return Transport.ENOUGH;
+            default:
+                return null; //null if можно else throw new IllegalArgument ТРАНСПОРТ И ФУРНИТУРА МОГУТ
         }
-        return transport;
+
     }
 
 
     public Furnish readFurnish() throws IllegalArgumentException, InvalidInputException, IOException {
-        Furnish furnish = null;
-        String stringFurnish = inputManager.read();
-        if (!stringFurnish.isEmpty()) {
-            furnish = Furnish.valueOf(stringFurnish.toUpperCase(Locale.ROOT));
+
+        switch (inputManager.read().trim()) {
+            case "1":
+                return Furnish.NONE;
+            case "2":
+                return Furnish.FINE;
+            case "3":
+                return Furnish.LITTLE;
+            default:
+                return null; // throw new IllegalArgument
         }
-        return furnish;
+
     }
 
     public Long readArea() throws IllegalValueException, NumberFormatException, InvalidInputException, IOException {

@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * класс, работающий с данными пользователя
+ */
 public class UserManager {
     private final List<User> users;
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
@@ -40,6 +43,11 @@ public class UserManager {
         }
     }
 
+    /**
+     * метод, добавляющий данные нового пользователя в базу данных
+     * @param user пользователь
+     * @return boolean, который символизирует, зарегистрированы данные пользователя или нет
+     */
     public boolean register(User user) {
         try {
             user.setPassword(PasswordEncoder.hash(user.getPassword()));
@@ -58,6 +66,10 @@ public class UserManager {
         } return true;
     }
 
+    /**
+     * метод, получающий таблицу с всеми пользователями в базе данных
+     * @return лист с пользователями
+     */
     public List<User> getUsersTable() {
         try {
             List<User> sqlUsers = new ArrayList<>();

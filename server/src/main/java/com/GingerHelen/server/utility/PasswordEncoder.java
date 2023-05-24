@@ -5,6 +5,9 @@ import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 
+/**
+ * класс, хэширующий пароль
+ */
 public final class PasswordEncoder {
 
     private PasswordEncoder(){

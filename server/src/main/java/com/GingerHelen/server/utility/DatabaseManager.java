@@ -6,6 +6,10 @@ import org.slf4j.Logger;
 import java.sql.*;
 import java.util.TreeMap;
 
+/**
+ * класс, реализующий запросы в базу данных
+ */
+
 public class DatabaseManager {
     private static final int NAME_INDEX = 1;
     private static final int X_INDEX = 2;
@@ -36,6 +40,10 @@ public class DatabaseManager {
         this.logger = logger;
     }
 
+    /**
+     * метод, создающий таблицу для хранения данных
+     * @throws SQLException ошибка, связанная с базой данных
+     */
     public void createTable() throws SQLException {
         Statement statement = connection.createStatement();
         statement.execute("CREATE TABLE IF NOT EXIST " + tableName
@@ -75,11 +83,23 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * метод, подготавливающий statement для исполнения
+     * @param statement statement, подготовку которого необходимо осуществить
+     * @param flat данные, записывающиеся в statement выражения
+     * @param key ключ, необходимый для подготовки statement
+     * @throws SQLException ошибка, связанная с базой данных
+     */
     private void prepareStatement(PreparedStatement statement, Flat flat, Long key) throws SQLException {
         prepareStatement(statement, flat);
         statement.setLong(KEY_INDEX, key);
     }
-
+    /**
+     * метод, подготавливающий statement для исполнения
+     * @param statement statement, подготовку которого необходимо осуществить
+     * @param flat данные, записывающиеся в statement выражения
+     * @throws SQLException ошибка, связанная с базой данных
+     */
     private void prepareStatement(PreparedStatement statement, Flat flat) throws SQLException {
         statement.setInt(ID_INDEX, flat.getId());
         statement.setString(NAME_INDEX, flat.getName());
@@ -164,6 +184,11 @@ public class DatabaseManager {
         }
         return true;
     }
+
+    /**
+     * метод, запрашивающий таблицу с данными
+     * @return map с данными, которые на данный момент есть в базе данных
+     */
     public TreeMap<Long, Flat> getDataTable() {
         try {
             createTable();

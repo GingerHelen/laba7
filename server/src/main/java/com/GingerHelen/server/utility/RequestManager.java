@@ -72,6 +72,11 @@ public class RequestManager {
         } return null;
     }
 
+    /**
+     * метод, обрабатываюший клиентские запросы
+     * @param request запрос клиента
+     * @return ответ сервера
+     */
     private Object handleRequest(Object request) {
         if (request instanceof StartRequest) {
             if (!userManager.checkUsername(((StartRequest) request).getUser().getUsername())) {
@@ -95,6 +100,12 @@ public class RequestManager {
         return new Response(ResponseCode.ERROR, "commands should be executed by authorized users");
     }
 
+    /**
+     * метод, отправляющий ответ сервера
+     * @param response ответ сервера
+     * @param client адрес клиента
+     * @throws IOException ошибка при отправлении ответа
+     */
     private void send(Object response, SocketAddress client) throws IOException, InterruptedException {
         byte[] bytesSending = Serializer.serialize(response);
         ByteBuffer wrapperSending = ByteBuffer.wrap(bytesSending);

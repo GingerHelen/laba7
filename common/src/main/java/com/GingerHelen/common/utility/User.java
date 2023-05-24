@@ -5,6 +5,9 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
+/**
+ * класс, описывающий пользователя программы
+ */
 @Getter
 @Setter
 public class User implements Serializable {

@@ -108,6 +108,11 @@ public class ConsoleManager {
         return Serializer.deserialize(bytesReceiving);
     }
 
+    /**
+     * метод, обрабатывающий ответ сервера
+     * @param response ответ, который отправляется клиенту
+     * @return boolean, который символизирует, продолжает работать программа или следует остановиться
+     */
     private boolean handleResponseCode (Response response) {
         boolean isWorking = true;
         switch (response.getResponseCode()) {
@@ -139,6 +144,14 @@ public class ConsoleManager {
         return commandWithArg;
     }
 
+    /**
+     * метод, запрашивающий имя и пароль с консоли, пока не будет зарегистрирован пользователь или пока он не войдет
+     * в свой аккаунт
+     * @throws InvalidInputException ошибка при вводе недопустимых значений
+     * @throws IOException ошибка при чтении и записи данных
+     * @throws NoConnectionException ошибка при потери связи с сервером или невозможности его установить
+     * @throws ClassNotFoundException ошибка при получении данных
+     */
     private void authorize() throws InvalidInputException, IOException, NoConnectionException, ClassNotFoundException {
         boolean isAuthorized = false;
         do {

@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 /**
  * главный класс клиентского приложения
@@ -20,7 +18,7 @@ public class Client {
     private final static int PORT_INDEX = 1;
     private static final int MAX_PORT = 65535;
     private static final int MIN_PORT = 1;
-    private static final int NUMBER_OF_ARGS = 3;
+    private static final int NUMBER_OF_ARGS = 2;
 
     public static void main(String[] args) {
 
@@ -45,7 +43,7 @@ public class Client {
             return;
         }
         try (DatagramSocket client = new DatagramSocket()) {
-            client.setSoTimeout(100);
+            client.setSoTimeout(1000);
             OutputManager outputManager = new OutputManager(System.out);
             InputManager inputManager = new InputManager(new BufferedInputStream(System.in), outputManager);
             FlatReader flatReader = new FlatReader(inputManager);

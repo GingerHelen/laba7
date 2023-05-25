@@ -66,7 +66,7 @@ public class FlatReader {
             case "5":
                 return Transport.ENOUGH;
             default:
-                return null; //null if можно else throw new IllegalArgument ТРАНСПОРТ И ФУРНИТУРА МОГУТ
+                return null;
         }
 
     }
@@ -82,7 +82,7 @@ public class FlatReader {
             case "3":
                 return Furnish.LITTLE;
             default:
-                return null; // throw new IllegalArgument
+                return null;
         }
 
     }

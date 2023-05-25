@@ -79,6 +79,7 @@ public class Server {
             logger.error("error");
         } catch (SQLException e) {
             logger.error("error with connection to database");
+            e.printStackTrace();
             logger.error(e.getMessage());
         } catch (ExecutionException e) {
             logger.error(e.getMessage());

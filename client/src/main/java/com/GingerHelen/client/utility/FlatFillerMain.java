@@ -50,19 +50,19 @@ public class FlatFillerMain {
 
 
     public Furnish fillFurnish() throws ScriptException, InvalidInputException, IOException {
-        return flatFiller.fill("Chose the furnish type. Enter number of type \\n" +
+        return flatFiller.fill("Chose the furnish type. Enter number of type. " +
                 "1 - NONE, 2 - FINE, 3 - LITTLE", reader::readFurnish);
     }
 
 
     public View fillView() throws ScriptException, InvalidInputException, IOException {
-        return flatFiller.fill("Chose the view. Enter number of type \\n" +
+        return flatFiller.fill("Chose the view. Enter number of type. " +
                 "1 - STREET, 2 - PARK, 3 - BAD, 4 - NORMAL, 5 - TERRIBLE", reader::readView);
     }
 
 
     public Transport fillTransport() throws ScriptException, InvalidInputException, IOException {
-        return flatFiller.fill("Chose the transport. Enter number of type \\n" +
+        return flatFiller.fill("Chose the transport. Enter number of type. " +
                 "1 - FEW, 2 - NONE, 3 - LITTLE, 4 - NORMAL, 5 - ENOUGH", reader::readTransport);
     }
 

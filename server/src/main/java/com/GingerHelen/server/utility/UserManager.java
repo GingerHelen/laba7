@@ -20,10 +20,10 @@ public class UserManager {
 
     private final String tableUsers;
     public UserManager(Connection connection, String tableUsers, Logger logger) {
-        this.users = getUsersTable();
         this.connection = connection;
         this.tableUsers = tableUsers;
         this.logger = logger;
+        this.users = getUsersTable();
     }
     public boolean checkUsername(String username) {
         lock.readLock().lock();
@@ -51,17 +51,18 @@ public class UserManager {
     public boolean register(User user) {
         try {
             user.setPassword(PasswordEncoder.hash(user.getPassword()));
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO " + tableUsers + "(username,password) VALUSE " +
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO " + tableUsers + "(username,password) VALUES " +
                     "(?,?)");
             statement.setString(1, user.getUsername());
             statement.setString(2, user.getPassword());
             statement.execute();
-            lock.writeLock().lock();
-            users.add(user);
         } catch (SQLException e) {
             logger.error("error during writing data to database");
+            e.printStackTrace();
             return false;
-        } finally {
+        } lock.writeLock().lock();
+        try {users.add(user);}
+        finally {
             lock.writeLock().unlock();
         } return true;
     }
@@ -71,17 +72,18 @@ public class UserManager {
      * @return лист с пользователями
      */
     public List<User> getUsersTable() {
+        lock.writeLock().lock();
         try {
             List<User> sqlUsers = new ArrayList<>();
             Statement statement = connection.createStatement();
             createUsersTableName();
             ResultSet result = statement.executeQuery("SELECT * FROM " + tableUsers);
-            lock.writeLock().lock();
             while (result.next()) {
                 sqlUsers.add(new User(result.getString("username"), result.getString("password")));
             } return sqlUsers;
         } catch (SQLException e) {
             logger.error("error during getting users table");
+            e.printStackTrace();
             return null;
         } finally {
             lock.writeLock().unlock();
@@ -89,7 +91,7 @@ public class UserManager {
     }
     public void createUsersTableName() throws SQLException {
         Statement statement = connection.createStatement();
-        statement.execute("CREATE TABLE IF NOT EXIST" + tableUsers + "(userName VARCHAR(100) NOT NULL PRIMARY KEY, " +
-                "password VARCHAR(100) NOT NULL");
+        statement.execute("CREATE TABLE IF NOT EXISTS " + tableUsers + " (userName VARCHAR(100) NOT NULL PRIMARY KEY, " +
+                "password VARCHAR(100) NOT NULL)");
     }
 }

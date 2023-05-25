@@ -11,7 +11,6 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
 
 /**
  * класс, работающий с запросами клиента и считывающий save и exit с консоли
@@ -37,22 +36,31 @@ public class RequestManager {
 
     public void start() throws IOException, ClassNotFoundException, InterruptedException, ExecutionException {
         boolean isWorking = true;
-        while (isWorking) {
-            FutureTask<ClientRequest> futureTask = new FutureTask<>(this::receive);
-            new Thread(futureTask).start();
-            ClientRequest request = futureTask.get();
-            pullRequestResponse.submit(()->{
-                Object response = handleRequest(request.getRequest());
-                new Thread(()-> {
-                    try {
-                        send(response, request.getClientAddress());
-                    } catch (IOException e) {
-                        logger.error("error during sending response to the client");
-                    } catch (InterruptedException e) {
-                        logger.error(e.getMessage());
+            while (isWorking) {
+            new Thread(() -> {
+                try {
+                    ClientRequest request = receive();
+                    if (request != null) {
+                        pullRequestResponse.submit(() -> {
+                            logger.info("обработка запроса до использования хэндла");
+                            Object response = handleRequest(request.getRequest());
+                            logger.info("обработка запроса до создания потока отправления");
+                            new Thread(() -> {
+                                try {
+                                    logger.info("зашел");
+                                    send(response, request.getClientAddress());
+                                } catch (IOException e) {
+                                    logger.error("error during sending response to the client");
+                                } catch (InterruptedException e) {
+                                    logger.error(e.getMessage());
+                                }
+                            }).start();
+                        });
                     }
-                });
-            });
+                } catch (IOException | ClassNotFoundException e) {
+                    logger.error("error during receiving request");
+                }
+            }).start();
             if (System.in.available() > 0) {
                 final String serverCommand = scanner.nextLine().trim().toLowerCase();
                 if (serverCommand.equals("exit")) {

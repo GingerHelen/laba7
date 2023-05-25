@@ -46,30 +46,30 @@ public class DatabaseManager {
      */
     public void createTable() throws SQLException {
         Statement statement = connection.createStatement();
-        statement.execute("CREATE TABLE IF NOT EXIST " + tableName
-                + "(id SERIAL PRIMARY KEY, "
+        statement.execute("CREATE TABLE IF NOT EXISTS " + tableName
+                + " (id SERIAL PRIMARY KEY, "
                 + "key BIGINT NOT NULL, "
                 + "name VARCHAR(50) NOT NULL, "
                 + "x int NOT NULL, "
-                + "y BIGINT NOT NULL CHECK(Y>-808), "
+                + "y BIGINT NOT NULL CHECK(y>-808), "
                 + "area BIGINT NOT NULL CHECK(area>0), "
                 + "number_of_rooms BIGINT NOT NULL CHECK(number_of_rooms>0), "
-                + "name_house VARCHAR(100) NOT NULL,"
-                + "year_house BIGINT CHECK(year_house>0),"
-                + "number_of_floors INTEGER CHECK(number_of_floors>0),"
-                + "number_of_flats BIGINT CHECK(number_of_flats>0)"
-                + "number_of_lifts BIGINT CHECK(number_of_lifts>0)"
+                + "name_house VARCHAR(100) NOT NULL, "
+                + "year_house BIGINT CHECK(year_house>0), "
+                + "number_of_floors INTEGER CHECK(number_of_floors>0), "
+                + "number_of_flats BIGINT CHECK(number_of_flats>0), "
+                + "number_of_lifts BIGINT CHECK(number_of_lifts>0), "
                 + "furnish VARCHAR(100), "
                 + "view VARCHAR(100), "
                 + "transport VARCHAR(50), "
                 + "creation_date TIMESTAMP NOT NULL, "
-                + "owner VARCHAR(100) NOT NULL,"
+                + "owner VARCHAR(100) NOT NULL, "
                 + "FOREIGN KEY(owner) REFERENCES " + tableUsers + "(username))");
     }
 
     public Integer insert(Long key, Flat flat) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + tableName + "(name,x,y,"
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + tableName + " (name,x,y,"
                     + "area,number_of_rooms,name_house,"
                     + "year_house, number_of_floors, number_of_flats, number_of_lifts, furnish, view, transport, creation_date, owner, id, key) VALUES (?,"
                     + "?,?,?,?,?,?,?,?,?,?,?,?,?,?,default,?) RETURNING id");
@@ -79,6 +79,7 @@ public class DatabaseManager {
             return result.getInt("id");
         } catch (SQLException e) {
             logger.error("error during inserting new object");
+            e.printStackTrace();
             return null;
         }
     }
@@ -142,6 +143,7 @@ public class DatabaseManager {
             preparedStatement.execute();
         } catch (SQLException e) {
             logger.error("error during updating object from table", e);
+            e.printStackTrace();
             return false;
         }
         return true;
@@ -155,6 +157,7 @@ public class DatabaseManager {
             preparedStatement.execute();
         } catch (SQLException e) {
             logger.error("error during removing object from table");
+            e.printStackTrace();
             return false;
         }
         return true;
@@ -162,11 +165,12 @@ public class DatabaseManager {
 
     public boolean clear(String username) {
         try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM" + tableName + "WHERE owner=?");
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM " + tableName + "WHERE owner=?");
             statement.setString(1, username);
             statement.execute();
         } catch (SQLException e) {
             logger.error("error during deleting objects");
+            e.printStackTrace();
             return false;
         }
         return true;
@@ -174,12 +178,13 @@ public class DatabaseManager {
 
     public boolean removeGreater(String username, Long key) {
         try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM" + tableName + "WHERE key>? AND owner=?");
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM " + tableName + "WHERE key>? AND owner=?");
             statement.setLong(1, key);
             statement.setString(2, username);
             statement.execute();
         } catch (SQLException e) {
             logger.error("error during removing greater keys");
+            e.printStackTrace();
             return false;
         }
         return true;
@@ -207,6 +212,7 @@ public class DatabaseManager {
             } return hashflat;
         } catch (SQLException e) {
             logger.error("error during getting data table");
+            e.printStackTrace();
             return null;
         }
     }

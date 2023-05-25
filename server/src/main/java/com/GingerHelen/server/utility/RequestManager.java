@@ -42,12 +42,12 @@ public class RequestManager {
                     ClientRequest request = receive();
                     if (request != null) {
                         pullRequestResponse.submit(() -> {
-                            logger.info("обработка запроса до использования хэндла");
+                            logger.info("before handle request");
                             Object response = handleRequest(request.getRequest());
-                            logger.info("обработка запроса до создания потока отправления");
+                            logger.info("after handle request");
                             new Thread(() -> {
                                 try {
-                                    logger.info("зашел");
+                                    logger.info("before sending response");
                                     send(response, request.getClientAddress());
                                 } catch (IOException e) {
                                     logger.error("error during sending response to the client");
